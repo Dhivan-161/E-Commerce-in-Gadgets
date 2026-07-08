@@ -1,0 +1,106 @@
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<main class="container my-5">
+
+    <section class="mb-4">
+        <h1 class="text-center fw-bold">Application & Enquiry Form</h1>
+        <p class="text-center text-muted">
+            Please fill out this form if you have a bulk order enquiry, wish to partner with us, or are applying for an open position at Elite Store. Our team will review your application and respond as soon as possible.
+        </p>
+    </section>
+
+    <hr>
+
+    <section class="card shadow p-4">
+        <form action="#" method="POST" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label for="enquiry-type" class="form-label">Topic of Enquiry / Application:</label>
+                <select id="enquiry-type" name="enquiry_type" class="form-select" required>
+                    <option value="">-- Select Topic --</option>
+                    <option value="bulk_order">Bulk Gadget Purchase</option>
+                    <option value="partnership">Business Partnership</option>
+                    <option value="supplier">Become a Vendor/Supplier</option>
+                    <option value="careers">Job Application / Careers</option>
+                    <option value="other">Other Inquiry</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Company or Individual Name:</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter full name or company name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="contact-person" class="form-label">Contact Person Title/Role (if Company):</label>
+                <input type="text" id="contact-person" name="contact_person_title" class="form-control" placeholder="e.g. Purchasing Manager">
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address:</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@domain.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="123-456-7890" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="interest-category" class="form-label">Gadget Category of Interest:</label>
+                <select id="interest-category" name="interest_category" class="form-select">
+                    <option value="all">Multiple/General</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="wearables">Smart Watches</option>
+                    <option value="audio">Audio (Headphones/Speakers)</option>
+                    <option value="accessories">Other Accessories</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Expected Order Quantity (if Bulk Purchase):</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" min="1" placeholder="e.g., 50">
+            </div>
+
+            <div class="mb-3">
+                <label for="details" class="form-label">Detailed Requirements / Cover Letter:</label>
+                <textarea id="details" name="details" class="form-control" rows="8" placeholder="Please specify your request in detail. For job applications, outline your relevant experiences." required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="attachment" class="form-label">
+                    Upload Supporting Document (Resume, Bulk Order Sheet, Company Profile):
+                </label>
+                <input type="file" id="attachment" name="attachment" class="form-control">
+                <small class="text-muted">Accepted formats: .pdf, .docx, .xlsx (Max size: 5MB)</small>
+            </div>
+
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+                <button type="reset" class="btn btn-secondary">Clear Form</button>
+            </div>
+
+        </form>
+    </section>
+
+</main>
+
+<hr>
+
+<footer class="container text-center py-3">
+    <p>&copy; 2026 Elite Store. All Rights Reserved.</p>
+
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <a href="privacy-policy.html" class="text-decoration-none">Privacy Policy</a>
+        </li>
+        <li class="list-inline-item">
+            <a href="terms.html" class="text-decoration-none">Terms & Conditions</a>
+        </li>
+    </ul>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
