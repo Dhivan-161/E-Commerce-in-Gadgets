@@ -52,6 +52,64 @@
             box-shadow: none;
         }
 
+        .login-card .form-control.is-invalid,
+        .login-card .form-check-input.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+
+        .login-card .form-control.is-valid,
+        .login-card .form-check-input.is-valid {
+            border-color: #198754;
+            background-image: none;
+        }
+
+        .field-error {
+            color: #ff6b6b;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Password strength bar */
+        .strength-bar-wrap {
+            height: 5px;
+            background: #444;
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 4px;
+            transition: width 0.35s, background 0.35s;
+        }
+        .strength-label {
+            font-size: 0.78rem;
+            margin-top: 3px;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        .toast-success {
+            background: linear-gradient(135deg, #198754, #20c997);
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            animation: slideIn 0.4s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+
         .login-card a{
             color: #0dcaf0;
             text-decoration: none;
@@ -77,6 +135,35 @@
         }
     </style>
 
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <h2 class="text-center">1% Battery</h2>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="faq.html">FAQs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="enquiry.html">Application &amp; Enquiry</a></li>
+                        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+                        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
 <main class="container my-5">
 
     <section class="card shadow p-4 mx-auto" style="max-width:600px;">
@@ -92,7 +179,7 @@
         </p>
 
 
-        <form action="#" method="POST">
+        <form id="signupForm" action="#" method="POST" novalidate>
 
 
             <div class="mb-3">
@@ -106,8 +193,8 @@
                 id="fullname" 
                 name="fullname" 
                 class="form-control"
-                placeholder="Irfan" 
-                required>
+                placeholder="John Doe">
+                <span class="field-error" id="fullnameError"></span>
 
             </div>
 
@@ -124,8 +211,8 @@
                 id="email" 
                 name="email"
                 class="form-control"
-                placeholder="example@domain.com" 
-                required>
+                placeholder="example@domain.com">
+                <span class="field-error" id="emailError"></span>
 
             </div>
 
@@ -142,7 +229,8 @@
                 id="phone" 
                 name="phone"
                 class="form-control"
-                placeholder="123-456-7890">
+                placeholder="9876543210">
+                <span class="field-error" id="phoneError"></span>
 
             </div>
 
@@ -159,12 +247,13 @@
                 id="dob" 
                 name="dob"
                 class="form-control">
+                <span class="field-error" id="dobError"></span>
 
             </div>
 
 
 
-            <div class="mb-3">
+            <div class="mb-3" id="genderGroup">
 
                 <label class="form-label">
                     Gender:
@@ -208,7 +297,8 @@
                 <label for="other">
                     Other
                 </label>
-
+                <br>
+                <span class="field-error" id="genderError"></span>
 
             </div>
 
@@ -225,8 +315,10 @@
                 id="password" 
                 name="password"
                 class="form-control"
-                minlength="8" 
-                required>
+                placeholder="Min. 8 characters">
+                <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
+                <span class="strength-label" id="strengthLabel" style="color:#aaa;"></span>
+                <span class="field-error" id="passwordError"></span>
 
             </div>
 
@@ -244,8 +336,8 @@
                 id="confirm-password" 
                 name="confirm-password"
                 class="form-control"
-                minlength="8" 
-                required>
+                placeholder="Re-enter password">
+                <span class="field-error" id="confirmError"></span>
 
             </div>
 
@@ -258,15 +350,14 @@
                 type="checkbox" 
                 id="terms" 
                 name="terms"
-                class="form-check-input"
-                required>
+                class="form-check-input">
 
 
                 <label for="terms" class="form-check-label">
 
                     I accept the 
                     <a href="terms.html" target="_blank">
-                        Terms & Conditions
+                        Terms &amp; Conditions
                     </a>
 
                     and
@@ -276,6 +367,8 @@
                     </a>
 
                 </label>
+                <br>
+                <span class="field-error" id="termsError"></span>
 
             </div>
 
@@ -365,6 +458,193 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function setError(input, spanId, msg) {
+    input.classList.remove('is-valid');
+    input.classList.add('is-invalid');
+    document.getElementById(spanId).textContent = msg;
+}
+function setValid(input, spanId) {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+    document.getElementById(spanId).textContent = '';
+}
+function clearField(input, spanId) {
+    input.classList.remove('is-valid', 'is-invalid');
+    document.getElementById(spanId).textContent = '';
+}
+function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast-success';
+    t.innerHTML = `&#10003; ${msg}`;
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 3800);
+}
+
+// ── Password Strength ────────────────────────────────────────────────────────
+const passEl     = document.getElementById('password');
+const barEl      = document.getElementById('strengthBar');
+const labelEl    = document.getElementById('strengthLabel');
+
+function getStrength(p) {
+    let score = 0;
+    if (p.length >= 8)  score++;
+    if (p.length >= 12) score++;
+    if (/[A-Z]/.test(p)) score++;
+    if (/[0-9]/.test(p)) score++;
+    if (/[^A-Za-z0-9]/.test(p)) score++;
+    return score;
+}
+
+passEl.addEventListener('input', () => {
+    const val = passEl.value;
+    const passError = document.getElementById('passwordError');
+    if (!val) {
+        barEl.style.width = '0'; labelEl.textContent = '';
+        setError(passEl, 'passwordError', 'Password is required.');
+        return;
+    }
+    if (val.length < 8) {
+        setError(passEl, 'passwordError', 'Password must be at least 8 characters.');
+    } else {
+        setValid(passEl, 'passwordError');
+    }
+    const s = getStrength(val);
+    const levels = [
+        { w: '20%',  color: '#dc3545', lbl: 'Very Weak' },
+        { w: '40%',  color: '#fd7e14', lbl: 'Weak'      },
+        { w: '60%',  color: '#ffc107', lbl: 'Fair'      },
+        { w: '80%',  color: '#0d6efd', lbl: 'Strong'    },
+        { w: '100%', color: '#198754', lbl: 'Very Strong'},
+    ];
+    const idx = Math.min(s - 1, 4);
+    if (s === 0) { barEl.style.width = '0'; labelEl.textContent = ''; return; }
+    barEl.style.width      = levels[idx].w;
+    barEl.style.background = levels[idx].color;
+    labelEl.textContent    = levels[idx].lbl;
+    labelEl.style.color    = levels[idx].color;
+
+    // also re-check confirm
+    const cfm = document.getElementById('confirm-password');
+    if (cfm.value) {
+        if (cfm.value === val) setValid(cfm, 'confirmError');
+        else setError(cfm, 'confirmError', 'Passwords do not match.');
+    }
+});
+
+// ── Confirm Password ─────────────────────────────────────────────────────────
+document.getElementById('confirm-password').addEventListener('input', function() {
+    if (!this.value) {
+        setError(this, 'confirmError', 'Please confirm your password.');
+    } else if (this.value !== passEl.value) {
+        setError(this, 'confirmError', 'Passwords do not match.');
+    } else {
+        setValid(this, 'confirmError');
+    }
+});
+
+// ── Real-time: Full Name ─────────────────────────────────────────────────────
+document.getElementById('fullname').addEventListener('input', function() {
+    const v = this.value.trim();
+    if (!v) setError(this, 'fullnameError', 'Full name is required.');
+    else if (v.length < 2) setError(this, 'fullnameError', 'Name must be at least 2 characters.');
+    else setValid(this, 'fullnameError');
+});
+
+// ── Real-time: Email ─────────────────────────────────────────────────────────
+document.getElementById('email').addEventListener('input', function() {
+    const v = this.value.trim();
+    if (!v) setError(this, 'emailError', 'Email address is required.');
+    else if (!isValidEmail(v)) setError(this, 'emailError', 'Enter a valid email address.');
+    else setValid(this, 'emailError');
+});
+
+// ── Real-time: Phone ─────────────────────────────────────────────────────────
+document.getElementById('phone').addEventListener('input', function() {
+    const v = this.value.trim();
+    if (v && !/^[0-9]{10}$/.test(v)) setError(this, 'phoneError', 'Enter a valid 10-digit phone number.');
+    else if (v) setValid(this, 'phoneError');
+    else clearField(this, 'phoneError');
+});
+
+// ── Real-time: DOB ───────────────────────────────────────────────────────────
+document.getElementById('dob').addEventListener('change', function() {
+    const v = this.value;
+    if (!v) { clearField(this, 'dobError'); return; }
+    const age = Math.floor((Date.now() - new Date(v)) / (365.25 * 24 * 3600 * 1000));
+    if (age < 13) setError(this, 'dobError', 'You must be at least 13 years old.');
+    else setValid(this, 'dobError');
+});
+
+// ── Submit ───────────────────────────────────────────────────────────────────
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let ok = true;
+
+    // Full Name
+    const fnEl = document.getElementById('fullname');
+    const fn   = fnEl.value.trim();
+    if (!fn) { setError(fnEl, 'fullnameError', 'Full name is required.'); ok = false; }
+    else if (fn.length < 2) { setError(fnEl, 'fullnameError', 'Name must be at least 2 characters.'); ok = false; }
+    else setValid(fnEl, 'fullnameError');
+
+    // Email
+    const emEl = document.getElementById('email');
+    const em   = emEl.value.trim();
+    if (!em) { setError(emEl, 'emailError', 'Email address is required.'); ok = false; }
+    else if (!isValidEmail(em)) { setError(emEl, 'emailError', 'Enter a valid email address.'); ok = false; }
+    else setValid(emEl, 'emailError');
+
+    // Phone (optional but validated if provided)
+    const phEl = document.getElementById('phone');
+    const ph   = phEl.value.trim();
+    if (ph && !/^[0-9]{10}$/.test(ph)) { setError(phEl, 'phoneError', 'Enter a valid 10-digit phone number.'); ok = false; }
+    else if (ph) setValid(phEl, 'phoneError');
+    else clearField(phEl, 'phoneError');
+
+    // DOB (optional but validated if provided)
+    const dobEl = document.getElementById('dob');
+    if (dobEl.value) {
+        const age = Math.floor((Date.now() - new Date(dobEl.value)) / (365.25 * 24 * 3600 * 1000));
+        if (age < 13) { setError(dobEl, 'dobError', 'You must be at least 13 years old.'); ok = false; }
+        else setValid(dobEl, 'dobError');
+    }
+
+    // Gender
+    const genderSelected = document.querySelector('input[name="gender"]:checked');
+    const genderSpan = document.getElementById('genderError');
+    if (!genderSelected) { genderSpan.textContent = 'Please select a gender.'; ok = false; }
+    else genderSpan.textContent = '';
+
+    // Password
+    const pwVal = passEl.value;
+    if (!pwVal) { setError(passEl, 'passwordError', 'Password is required.'); ok = false; }
+    else if (pwVal.length < 8) { setError(passEl, 'passwordError', 'Password must be at least 8 characters.'); ok = false; }
+    else setValid(passEl, 'passwordError');
+
+    // Confirm Password
+    const cfmEl = document.getElementById('confirm-password');
+    if (!cfmEl.value) { setError(cfmEl, 'confirmError', 'Please confirm your password.'); ok = false; }
+    else if (cfmEl.value !== pwVal) { setError(cfmEl, 'confirmError', 'Passwords do not match.'); ok = false; }
+    else setValid(cfmEl, 'confirmError');
+
+    // Terms
+    const termsEl  = document.getElementById('terms');
+    const termsSpan = document.getElementById('termsError');
+    if (!termsEl.checked) { termsSpan.textContent = 'You must accept the Terms & Conditions.'; ok = false; }
+    else termsSpan.textContent = '';
+
+    if (ok) {
+        showToast('Account created successfully! Redirecting to login...');
+        setTimeout(() => window.location.href = 'login.html', 2000);
+    }
+});
+</script>
 
 
 </body>

@@ -8,9 +8,79 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+        .field-error {
+            color: #dc3545;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            display: block;
+        }
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+        .form-control.is-valid {
+            border-color: #198754;
+            background-image: none;
+        }
+        .char-count {
+            font-size: 0.78rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 3px;
+        }
+        .char-count.warn { color: #fd7e14; }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        .toast-success {
+            background: linear-gradient(135deg, #198754, #20c997);
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px 22px;
+            font-weight: 600;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+            animation: slideIn 0.4s ease;
+            min-width: 260px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+    </style>
+
 </head>
 
 <body>
+
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <h2 class="text-center">1% Battery</h2>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="faq.html">FAQs</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="contact.html">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="enquiry.html">Application &amp; Enquiry</a></li>
+                        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+                        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
 
 <main class="container my-5">
 
@@ -44,30 +114,34 @@
 
         <h2 class="mb-4">Send Us a Message</h2>
 
-        <form action="#" method="POST">
+        <form id="contactForm" action="#" method="POST" novalidate>
 
             <div class="mb-3">
                 <label for="name" class="form-label">Your Name:</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Irfan" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="John Doe">
+                <span class="field-error" id="nameError"></span>
             </div>
 
 
             <div class="mb-3">
                 <label for="email" class="form-label">Your Email:</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="example@domain.com" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="example@domain.com">
+                <span class="field-error" id="emailError"></span>
             </div>
 
 
             <div class="mb-3">
                 <label for="subject" class="form-label">Subject:</label>
-                <input type="text" class="form-control" id="subject" name="subject" placeholder="Question about order / general inquiry" required>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="Question about order / general inquiry">
+                <span class="field-error" id="subjectError"></span>
             </div>
 
 
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>
-
-                <textarea class="form-control" id="message" name="message" rows="6" placeholder="Type your message here..." required></textarea>
+                <textarea class="form-control" id="message" name="message" rows="6" placeholder="Type your message here..."></textarea>
+                <div class="char-count" id="charCount">0 / 1000 characters</div>
+                <span class="field-error" id="messageError"></span>
             </div>
 
 
@@ -142,6 +216,121 @@
 
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── Helpers ────────────────────────────────────────────────────────
+function setError(el, spanId, msg) {
+    el.classList.remove('is-valid');
+    el.classList.add('is-invalid');
+    document.getElementById(spanId).textContent = msg;
+}
+function setValid(el, spanId) {
+    el.classList.remove('is-invalid');
+    el.classList.add('is-valid');
+    document.getElementById(spanId).textContent = '';
+}
+function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast-success';
+    t.innerHTML = `&#10003;&nbsp;${msg}`;
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+}
+
+// ── Real-time: Name ─────────────────────────────────────────────────────
+document.getElementById('name').addEventListener('input', function () {
+    const v = this.value.trim();
+    if (!v)            setError(this, 'nameError', 'Your name is required.');
+    else if (v.length < 2) setError(this, 'nameError', 'Name must be at least 2 characters.');
+    else               setValid(this, 'nameError');
+});
+
+// ── Real-time: Email ─────────────────────────────────────────────────────
+document.getElementById('email').addEventListener('input', function () {
+    const v = this.value.trim();
+    if (!v)                setError(this, 'emailError', 'Email address is required.');
+    else if (!isValidEmail(v)) setError(this, 'emailError', 'Please enter a valid email address.');
+    else                   setValid(this, 'emailError');
+});
+
+// ── Real-time: Subject ────────────────────────────────────────────────────
+document.getElementById('subject').addEventListener('input', function () {
+    const v = this.value.trim();
+    if (!v)            setError(this, 'subjectError', 'Subject is required.');
+    else if (v.length < 3) setError(this, 'subjectError', 'Subject must be at least 3 characters.');
+    else               setValid(this, 'subjectError');
+});
+
+// ── Real-time: Message (with char counter) ─────────────────────────────────
+const msgEl   = document.getElementById('message');
+const countEl = document.getElementById('charCount');
+const MAX_CHARS = 1000;
+
+msgEl.addEventListener('input', function () {
+    const len = this.value.length;
+    countEl.textContent = `${len} / ${MAX_CHARS} characters`;
+    countEl.classList.toggle('warn', len > MAX_CHARS * 0.9);
+
+    if (!this.value.trim()) {
+        setError(this, 'messageError', 'Message is required.');
+    } else if (this.value.trim().length < 10) {
+        setError(this, 'messageError', 'Message must be at least 10 characters.');
+    } else if (len > MAX_CHARS) {
+        setError(this, 'messageError', `Message cannot exceed ${MAX_CHARS} characters.`);
+    } else {
+        setValid(this, 'messageError');
+    }
+});
+
+// ── Submit ───────────────────────────────────────────────────────────────────
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    let ok = true;
+
+    // Name
+    const nameEl = document.getElementById('name');
+    const nameV  = nameEl.value.trim();
+    if (!nameV)            { setError(nameEl, 'nameError', 'Your name is required.'); ok = false; }
+    else if (nameV.length < 2) { setError(nameEl, 'nameError', 'Name must be at least 2 characters.'); ok = false; }
+    else                   setValid(nameEl, 'nameError');
+
+    // Email
+    const emailEl = document.getElementById('email');
+    const emailV  = emailEl.value.trim();
+    if (!emailV)               { setError(emailEl, 'emailError', 'Email address is required.'); ok = false; }
+    else if (!isValidEmail(emailV)) { setError(emailEl, 'emailError', 'Please enter a valid email address.'); ok = false; }
+    else                       setValid(emailEl, 'emailError');
+
+    // Subject
+    const subjectEl = document.getElementById('subject');
+    const subjectV  = subjectEl.value.trim();
+    if (!subjectV)              { setError(subjectEl, 'subjectError', 'Subject is required.'); ok = false; }
+    else if (subjectV.length < 3) { setError(subjectEl, 'subjectError', 'Subject must be at least 3 characters.'); ok = false; }
+    else                        setValid(subjectEl, 'subjectError');
+
+    // Message
+    const msgV = msgEl.value.trim();
+    if (!msgV)           { setError(msgEl, 'messageError', 'Message is required.'); ok = false; }
+    else if (msgV.length < 10) { setError(msgEl, 'messageError', 'Message must be at least 10 characters.'); ok = false; }
+    else if (msgEl.value.length > MAX_CHARS) { setError(msgEl, 'messageError', `Message cannot exceed ${MAX_CHARS} characters.`); ok = false; }
+    else                 setValid(msgEl, 'messageError');
+
+    if (ok) {
+        showToast('Message sent successfully! We\'ll get back to you soon.');
+        this.reset();
+        // Reset visual states after submit
+        [nameEl, emailEl, subjectEl, msgEl].forEach(el => el.classList.remove('is-valid'));
+        countEl.textContent = '0 / 1000 characters';
+        countEl.classList.remove('warn');
+    }
+});
+</script>
 
 </body>
 </html>

@@ -44,6 +44,45 @@
             box-shadow: none;
         }
 
+        .login-card .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+
+        .login-card .form-control.is-valid {
+            border-color: #198754;
+            background-image: none;
+        }
+
+        .field-error {
+            color: #ff6b6b;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #198754, #20c997);
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+
         .login-card a{
             color: #0dcaf0;
             text-decoration: none;
@@ -72,6 +111,32 @@
 
 <body>
 
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <h2 class="text-center">1% Battery</h2>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="faq.html">FAQs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="enquiry.html">Application &amp; Enquiry</a></li>
+                        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
 <main class="container">
 
     <div class="row justify-content-center align-items-center vh-100">
@@ -88,7 +153,7 @@
                         Enter your details below to access your account.
                     </p>
 
-                    <form action="#" method="POST">
+                    <form id="loginForm" action="#" method="POST" novalidate>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">
@@ -101,7 +166,8 @@
                                 id="email"
                                 name="email"
                                 placeholder="example@domain.com"
-                                required>
+                                autocomplete="email">
+                            <span class="field-error" id="emailError"></span>
                         </div>
 
                         <div class="mb-3">
@@ -115,7 +181,8 @@
                                 id="password"
                                 name="password"
                                 placeholder="Enter Password"
-                                required>
+                                autocomplete="current-password">
+                            <span class="field-error" id="passwordError"></span>
                         </div>
 
                         <div class="form-check mb-4">
@@ -194,6 +261,109 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    const loginForm  = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passInput  = document.getElementById('password');
+
+    // ── Helpers ────────────────────────────────────────────────
+    function setError(input, errorSpan, message) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        errorSpan.textContent = message;
+    }
+
+    function setValid(input, errorSpan) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        errorSpan.textContent = '';
+    }
+
+    function clearState(input, errorSpan) {
+        input.classList.remove('is-valid', 'is-invalid');
+        errorSpan.textContent = '';
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-success';
+        toast.innerHTML = `&#10003; ${message}`;
+        document.getElementById('toastContainer').appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
+    // ── Real-time validation ───────────────────────────────────
+    emailInput.addEventListener('input', () => {
+        const emailError = document.getElementById('emailError');
+        const val = emailInput.value.trim();
+        if (!val) {
+            setError(emailInput, emailError, 'Email address is required.');
+        } else if (!isValidEmail(val)) {
+            setError(emailInput, emailError, 'Please enter a valid email address.');
+        } else {
+            setValid(emailInput, emailError);
+        }
+    });
+
+    passInput.addEventListener('input', () => {
+        const passError = document.getElementById('passwordError');
+        const val = passInput.value;
+        if (!val) {
+            setError(passInput, passError, 'Password is required.');
+        } else if (val.length < 6) {
+            setError(passInput, passError, 'Password must be at least 6 characters.');
+        } else {
+            setValid(passInput, passError);
+        }
+    });
+
+    // ── Submit validation ──────────────────────────────────────
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        const emailError = document.getElementById('emailError');
+        const passError  = document.getElementById('passwordError');
+        const emailVal   = emailInput.value.trim();
+        const passVal    = passInput.value;
+
+        // Validate email
+        if (!emailVal) {
+            setError(emailInput, emailError, 'Email address is required.');
+            isValid = false;
+        } else if (!isValidEmail(emailVal)) {
+            setError(emailInput, emailError, 'Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setValid(emailInput, emailError);
+        }
+
+        // Validate password
+        if (!passVal) {
+            setError(passInput, passError, 'Password is required.');
+            isValid = false;
+        } else if (passVal.length < 6) {
+            setError(passInput, passError, 'Password must be at least 6 characters.');
+            isValid = false;
+        } else {
+            setValid(passInput, passError);
+        }
+
+        if (isValid) {
+            showToast('Login successful! Redirecting...');
+            // Submit or redirect after brief delay
+            setTimeout(() => loginForm.submit(), 1800);
+        }
+    });
+</script>
 
 </body>
 </html>
