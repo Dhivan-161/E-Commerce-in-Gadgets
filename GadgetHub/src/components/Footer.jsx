@@ -1,0 +1,101 @@
+import React from 'react';
+import { Box, Container, Grid, Typography, Link, Divider, IconButton, Stack } from '@mui/material';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import { useNavigate } from 'react-router-dom';
+
+const Footer = () => {
+  const navigate = useNavigate();
+
+  const footerLinks = {
+    Shop: ['Smartphones', 'Laptops', 'Tablets', 'Audio', 'Wearables'],
+    Company: ['About Us', 'Careers', 'Press', 'Blog'],
+    Support: ['Help Center', 'Shipping', 'Returns', 'Contact Us'],
+    Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy'],
+  };
+
+  return (
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: 'background.paper',
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        mt: 'auto',
+        pt: 6,
+        pb: 3,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          {/* Brand */}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <FlashOnIcon sx={{ color: 'primary.main' }} />
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #6C63FF, #FF6584)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+              >
+                GadgetHub
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.8 }}>
+              Your one-stop shop for the latest and greatest gadgets, electronics, and tech accessories. Free shipping on orders over $50.
+            </Typography>
+            <Stack direction="row" spacing={1}>
+              {[FacebookIcon, TwitterIcon, InstagramIcon, YouTubeIcon].map((Icon, i) => (
+                <IconButton key={i} size="small" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+                  <Icon fontSize="small" />
+                </IconButton>
+              ))}
+            </Stack>
+          </Grid>
+
+          {/* Links */}
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <Grid item xs={6} sm={3} md={2} key={category}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2 }}>
+                {category}
+              </Typography>
+              <Stack spacing={1}>
+                {links.map((link) => (
+                  <Link
+                    key={link}
+                    component="button"
+                    onClick={() => navigate('/products')}
+                    underline="none"
+                    sx={{
+                      color: 'text.secondary',
+                      fontSize: '0.875rem',
+                      textAlign: 'left',
+                      '&:hover': { color: 'primary.main' },
+                      transition: 'color 0.2s',
+                    }}
+                  >
+                    {link}
+                  </Link>
+                ))}
+              </Stack>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            © {new Date().getFullYear()} GadgetHub. All rights reserved.
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            🔒 Secure Payments &nbsp;|&nbsp; 🚚 Free Shipping &nbsp;|&nbsp; ↩️ Easy Returns
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+export default Footer;

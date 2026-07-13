@@ -1,0 +1,184 @@
+import React, { useState } from 'react';
+import {
+  AppBar, Toolbar, Typography, IconButton, Badge, Box,
+  InputBase, Drawer, List, ListItem, ListItemText, Divider,
+  useScrollTrigger, Slide, Tooltip,
+} from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import SearchIcon from '@mui/icons-material/Search';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { useThemeMode } from '../contexts/ThemeContext';
+
+const NAV_LINKS = [
+  { label: 'Home', path: '/' },
+  { label: 'Products', path: '/products' },
+  { label: 'Deals', path: '/deals' },
+  { label: 'About', path: '/about' },
+];
+
+function HideOnScroll({ children }) {
+  const trigger = useScrollTrigger();
+  return <Slide appear={false} direction="down" in={!trigger}>{children}</Slide>;
+}
+
+const Navbar = ({ onSearch }) => {
+  const { cartCount } = useCart();
+  const { mode, toggleTheme } = useThemeMode();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      if (onSearch) onSearch(searchQuery.trim());
+    }
+  };
+
+  return (
+    <>
+      <HideOnScroll>
+        <AppBar
+          position="sticky"
+          elevation={0}
+          sx={{
+            bgcolor: mode === 'dark' ? 'rgba(18,18,26,0.95)' : 'rgba(255,255,255,0.95)',
+            backdropFilter: 'blur(12px)',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            color: 'text.primary',
+          }}
+        >
+          <Toolbar sx={{ gap: 1, px: { xs: 2, md: 4 } }}>
+            {/* Logo */}
+            <Box
+              onClick={() => navigate('/')}
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', mr: 3 }}
+            >
+              <FlashOnIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #6C63FF, #FF6584)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+              >
+                GadgetHub
+              </Typography>
+            </Box>
+
+            {/* Desktop nav links */}
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1 }}>
+              {NAV_LINKS.map((link) => (
+                <Typography
+                  key={link.path}
+                  component="button"
+                  onClick={() => navigate(link.path)}
+                  sx={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    px: 2,
+                    py: 1,
+                    borderRadius: 2,
+                    fontWeight: location.pathname === link.path ? 700 : 500,
+                    color: location.pathname === link.path ? 'primary.main' : 'text.secondary',
+                    fontSize: '0.95rem',
+                    fontFamily: 'inherit',
+                    '&:hover': { color: 'primary.main', bgcolor: 'action.hover' },
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {link.label}
+                </Typography>
+              ))}
+            </Box>
+
+            {/* Search */}
+            <Box
+              sx={{
+                display: { xs: 'none', sm: 'flex' },
+                alignItems: 'center',
+                bgcolor: mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                borderRadius: 2,
+                px: 1.5,
+                py: 0.5,
+                mr: 1,
+                flex: { sm: 'none', md: '0 1 280px' },
+              }}
+            >
+              <SearchIcon sx={{ color: 'text.secondary', fontSize: 20, mr: 1 }} />
+              <InputBase
+                placeholder="Search gadgets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearch}
+                sx={{ fontSize: '0.9rem', width: '100%' }}
+              />
+            </Box>
+
+            {/* Theme toggle */}
+            <Tooltip title={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+              <IconButton onClick={toggleTheme} color="inherit" size="small">
+                {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+              </IconButton>
+            </Tooltip>
+
+            {/* Cart */}
+            <Tooltip title="Cart">
+              <IconButton onClick={() => navigate('/cart')} color="inherit">
+                <Badge badgeContent={cartCount} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+
+            {/* Mobile menu */}
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              sx={{ display: { xs: 'flex', md: 'none' } }}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Box sx={{ width: 260, p: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>Menu</Typography>
+            <IconButton onClick={() => setDrawerOpen(false)}><CloseIcon /></IconButton>
+          </Box>
+          <Divider sx={{ mb: 2 }} />
+          <List>
+            {NAV_LINKS.map((link) => (
+              <ListItem
+                key={link.path}
+                button
+                onClick={() => { navigate(link.path); setDrawerOpen(false); }}
+                sx={{
+                  borderRadius: 2, mb: 0.5,
+                  bgcolor: location.pathname === link.path ? 'action.selected' : 'transparent',
+                }}
+              >
+                <ListItemText
+                  primary={link.label}
+                  primaryTypographyProps={{ fontWeight: location.pathname === link.path ? 700 : 400 }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
+    </>
+  );
+};
+
+export default Navbar;
