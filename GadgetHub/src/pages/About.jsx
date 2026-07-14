@@ -17,10 +17,10 @@ const STATS = [
 ];
 
 const TEAM = [
-  { name: 'Alex Chen', role: 'CEO & Founder', avatar: 'A', color: '#6C63FF' },
-  { name: 'Sarah Kim', role: 'Head of Products', avatar: 'S', color: '#FF6584' },
-  { name: 'Marcus Davis', role: 'Lead Engineer', avatar: 'M', color: '#4CAF50' },
-  { name: 'Priya Singh', role: 'Customer Success', avatar: 'P', color: '#FF9800' },
+  { name: 'Irfan', role: 'CEO & Founder', avatar: 'A', color: '#6C63FF' },
+  { name: 'Hashina', role: 'Head of Products', avatar: 'S', color: '#FF6584' },
+  { name: 'Bismi', role: 'Lead Engineer', avatar: 'M', color: '#4CAF50' },
+  { name: 'Afrin', role: 'Customer Success', avatar: 'P', color: '#FF9800' },
 ];
 
 const About = () => {

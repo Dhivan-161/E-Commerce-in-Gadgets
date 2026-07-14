@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, Badge, Box,
   InputBase, Drawer, List, ListItem, ListItemText, Divider,
-  useScrollTrigger, Slide, Tooltip,
+  useScrollTrigger, Slide, Tooltip, Button, Avatar,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
@@ -14,6 +14,7 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useThemeMode } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const NAV_LINKS = [
   { label: 'Home', path: '/' },
@@ -30,6 +31,7 @@ function HideOnScroll({ children }) {
 const Navbar = ({ onSearch }) => {
   const { cartCount } = useCart();
   const { mode, toggleTheme } = useThemeMode();
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -137,6 +139,63 @@ const Navbar = ({ onSearch }) => {
               </IconButton>
             </Tooltip>
 
+            {/* User Session / Sign In */}
+            {currentUser ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, ml: 1 }}>
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: 'primary.main',
+                    fontSize: '0.9rem',
+                    fontWeight: 700
+                  }}
+                >
+                  {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                </Avatar>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    display: { xs: 'none', lg: 'block' },
+                    fontWeight: 700,
+                    color: 'text.primary'
+                  }}
+                >
+                  {currentUser.name}
+                </Typography>
+                <Button
+                  variant="text"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    logout();
+                    navigate('/');
+                  }}
+                  sx={{
+                    display: { xs: 'none', md: 'inline-flex' },
+                    color: 'text.secondary',
+                    '&:hover': { color: 'error.main' }
+                  }}
+                >
+                  Logout
+                </Button>
+              </Box>
+            ) : (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => navigate('/signin')}
+                sx={{
+                  display: { xs: 'none', md: 'inline-flex' },
+                  ml: 1,
+                  borderWidth: '1.5px',
+                  '&:hover': { borderWidth: '1.5px' }
+                }}
+              >
+                Sign In
+              </Button>
+            )}
+
             {/* Mobile menu */}
             <IconButton
               onClick={() => setDrawerOpen(true)}
@@ -174,6 +233,55 @@ const Navbar = ({ onSearch }) => {
                 />
               </ListItem>
             ))}
+            {currentUser ? (
+              <>
+                <Divider sx={{ my: 1 }} />
+                <ListItem sx={{ px: 2, py: 1 }}>
+                  <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+                    {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                  </Avatar>
+                  <ListItemText
+                    primary={currentUser.name}
+                    secondary={currentUser.email}
+                    primaryTypographyProps={{ fontWeight: 700 }}
+                  />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => {
+                    logout();
+                    navigate('/');
+                    setDrawerOpen(false);
+                  }}
+                  sx={{ borderRadius: 2, mb: 0.5 }}
+                >
+                  <ListItemText
+                    primary="Logout"
+                    primaryTypographyProps={{ fontWeight: 600, color: 'error.main' }}
+                  />
+                </ListItem>
+              </>
+            ) : (
+              <>
+                <Divider sx={{ my: 1 }} />
+                <ListItem
+                  button
+                  onClick={() => { navigate('/signin'); setDrawerOpen(false); }}
+                  sx={{
+                    borderRadius: 2, mb: 0.5,
+                    bgcolor: location.pathname === '/signin' ? 'action.selected' : 'transparent',
+                  }}
+                >
+                  <ListItemText
+                    primary="Sign In"
+                    primaryTypographyProps={{
+                      fontWeight: location.pathname === '/signin' ? 700 : 600,
+                      color: 'primary.main'
+                    }}
+                  />
+                </ListItem>
+              </>
+            )}
           </List>
         </Box>
       </Drawer>

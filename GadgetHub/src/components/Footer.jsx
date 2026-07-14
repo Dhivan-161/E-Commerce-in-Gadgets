@@ -11,10 +11,30 @@ const Footer = () => {
   const navigate = useNavigate();
 
   const footerLinks = {
-    Shop: ['Smartphones', 'Laptops', 'Tablets', 'Audio', 'Wearables'],
-    Company: ['About Us', 'Careers', 'Press', 'Blog'],
-    Support: ['Help Center', 'Shipping', 'Returns', 'Contact Us'],
-    Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy'],
+    Shop: [
+      { label: 'Smartphones', path: '/products' },
+      { label: 'Laptops', path: '/products' },
+      { label: 'Tablets', path: '/products' },
+      { label: 'Audio', path: '/products' },
+      { label: 'Wearables', path: '/products' },
+    ],
+    Company: [
+      { label: 'About Us', path: '/about' },
+      { label: 'Careers', path: '/about' },
+      { label: 'Press', path: '/about' },
+      { label: 'Blog', path: '/about' },
+    ],
+    Support: [
+      { label: 'Help Center', path: '/faq' },
+      { label: 'Shipping', path: '/faq' },
+      { label: 'Returns', path: '/faq' },
+      { label: 'Contact Us', path: '/contact' },
+    ],
+    Legal: [
+      { label: 'Privacy Policy', path: '/terms' },
+      { label: 'Terms of Service', path: '/terms' },
+      { label: 'Cookie Policy', path: '/terms' },
+    ],
   };
 
   return (
@@ -63,9 +83,9 @@ const Footer = () => {
               <Stack spacing={1}>
                 {links.map((link) => (
                   <Link
-                    key={link}
+                    key={link.label}
                     component="button"
-                    onClick={() => navigate('/products')}
+                    onClick={() => navigate(link.path)}
                     underline="none"
                     sx={{
                       color: 'text.secondary',
@@ -75,7 +95,7 @@ const Footer = () => {
                       transition: 'color 0.2s',
                     }}
                   >
-                    {link}
+                    {link.label}
                   </Link>
                 ))}
               </Stack>

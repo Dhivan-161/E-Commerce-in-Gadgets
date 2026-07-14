@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 
 import { ThemeContextProvider, useThemeMode } from './contexts/ThemeContext';
 import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { getTheme } from './theme/theme';
 import AppRoutes from './routes/AppRoutes';
 import Navbar from './components/Navbar';
@@ -34,9 +35,11 @@ const ThemedApp = () => {
 // Root App: wraps everything with providers
 const App = () => (
   <ThemeContextProvider>
-    <CartProvider>
-      <ThemedApp />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <ThemedApp />
+      </CartProvider>
+    </AuthProvider>
   </ThemeContextProvider>
 );
 
