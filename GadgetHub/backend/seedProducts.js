@@ -9,7 +9,7 @@ const defaultProducts = [
     originalPrice: 1199,
     rating: 4.8,
     reviews: 2341,
-    image: 'https://images.unsplash.com/photo-1757709608566-4b9fd41a7af5?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&q=80',
     badge: 'Best Seller',
     description: 'The latest iPhone with A17 Pro chip, titanium design, and the most advanced camera system ever.',
     inStock: true,

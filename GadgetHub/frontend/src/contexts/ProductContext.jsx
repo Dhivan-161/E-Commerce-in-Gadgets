@@ -6,21 +6,28 @@ import {
   deleteProduct as apiDeleteProduct 
 } from '../services/api';
 
+import { PRODUCTS } from '../data/products';
+
 const ProductContext = createContext();
 
 export const useProducts = () => useContext(ProductContext);
 
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(PRODUCTS);
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
       const data = await apiGetProducts();
-      setProducts(data);
+      if (Array.isArray(data) && data.length > 0) {
+        setProducts(data);
+      } else {
+        setProducts(PRODUCTS);
+      }
     } catch (error) {
-      console.error('Failed to fetch products from backend:', error);
+      console.error('Failed to fetch products from backend, using default products:', error);
+      setProducts(PRODUCTS);
     } finally {
       setLoading(false);
     }

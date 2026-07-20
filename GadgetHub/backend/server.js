@@ -5,8 +5,22 @@ const cors = require('cors');
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://e-commerce-in-gadgets-bpnv-nu.vercel.app',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, postman) or allowed origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all origins for smooth development & deployment
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());

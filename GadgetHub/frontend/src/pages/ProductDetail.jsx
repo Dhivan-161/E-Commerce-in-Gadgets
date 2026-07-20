@@ -24,8 +24,8 @@ const ProductDetail = () => {
   const [added, setAdded] = useState(false);
   const [qty, setQty] = useState(1);
 
-  const product = products.find((p) => p.id === Number(id));
-  const related = products.filter((p) => p.category === product?.category && p.id !== product?.id).slice(0, 4);
+  const product = products.find((p) => String(p.id) === String(id) || String(p._id) === String(id));
+  const related = products.filter((p) => p.category === product?.category && String(p.id || p._id) !== String(product?.id || product?._id)).slice(0, 4);
 
   if (!product) {
     return (
@@ -82,9 +82,9 @@ const ProductDetail = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-            <Rating value={product.rating} precision={0.1} readOnly />
+            <Rating value={product.rating || 5} precision={0.1} readOnly />
             <Typography variant="body2" color="text.secondary">
-              {product.rating} ({product.reviews.toLocaleString()} reviews)
+              {product.rating || 5} ({(product.reviews || 0).toLocaleString()} reviews)
             </Typography>
           </Box>
 
@@ -108,7 +108,7 @@ const ProductDetail = () => {
           <Box sx={{ mb: 3 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Key Features</Typography>
             <Stack spacing={0.5}>
-              {product.specs.map((spec) => (
+              {(product.specs || []).map((spec) => (
                 <Box key={spec} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <CheckCircleIcon sx={{ color: 'success.main', fontSize: 18 }} />
                   <Typography variant="body2">{spec}</Typography>
@@ -169,7 +169,7 @@ const ProductDetail = () => {
         )}
         {tab === 1 && (
           <Stack spacing={1}>
-            {product.specs.map((spec) => (
+            {(product.specs || []).map((spec) => (
               <Box key={spec} sx={{ display: 'flex', gap: 2 }}>
                 <CheckCircleIcon sx={{ color: 'primary.main', fontSize: 20, mt: 0.2 }} />
                 <Typography>{spec}</Typography>
@@ -180,10 +180,10 @@ const ProductDetail = () => {
         {tab === 2 && (
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Typography variant="h2" sx={{ fontWeight: 800 }}>{product.rating}</Typography>
+              <Typography variant="h2" sx={{ fontWeight: 800 }}>{product.rating || 5}</Typography>
               <Box>
-                <Rating value={product.rating} precision={0.1} readOnly />
-                <Typography variant="body2" color="text.secondary">{product.reviews.toLocaleString()} reviews</Typography>
+                <Rating value={product.rating || 5} precision={0.1} readOnly />
+                <Typography variant="body2" color="text.secondary">{(product.reviews || 0).toLocaleString()} reviews</Typography>
               </Box>
             </Box>
             <Typography color="text.secondary">Detailed reviews coming soon.</Typography>
