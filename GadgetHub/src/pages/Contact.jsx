@@ -64,15 +64,15 @@ const Contact = () => {
 
   const CONTACT_INFO = [
     {
-      icon: <PhoneIcon sx={{ fontSize: 28, color: '#6C63FF' }} />,
+      icon: <PhoneIcon sx={{ fontSize: 28, color: '#2563EB' }} />,
       title: 'Call Support',
       details: '+1 (800) 555-0199',
       subtext: 'Toll-free, Mon-Fri 9am - 6pm EST'
     },
     {
-      icon: <EmailIcon sx={{ fontSize: 28, color: '#FF6584' }} />,
+      icon: <EmailIcon sx={{ fontSize: 28, color: '#06B6D4' }} />,
       title: 'Email Us',
-      details: 'support@gadgethub.tech',
+      details: 'support@1% Battery.tech',
       subtext: 'We typically reply within 24 hours'
     },
     {
@@ -115,13 +115,13 @@ const Contact = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Info cards */}
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }} >
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
               Get In Touch
             </Typography>
             <Grid container spacing={2}>
               {CONTACT_INFO.map((item, index) => (
-                <Grid item xs={12} sm={6} md={12} key={index}>
+                <Grid size={{ xs: 12, sm: 6, md: 12 }} key={index}>
                   <Card sx={{ p: 2.5, display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Avatar sx={{ bgcolor: 'action.hover', width: 52, height: 52 }}>
                       {item.icon}
@@ -166,7 +166,7 @@ const Contact = () => {
           </Grid>
 
           {/* Form card */}
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }} >
             <Card sx={{ p: { xs: 3, md: 4 } }}>
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
                 Send Us a Message
@@ -183,13 +183,13 @@ const Contact = () => {
 
               {success && (
                 <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
-                  🎉 Your message has been sent successfully! We will get back to you soon.
+                  ?? Your message has been sent successfully! We will get back to you soon.
                 </Alert>
               )}
 
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2.5}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }} >
                     <TextField
                       fullWidth
                       label="Your Name"
@@ -199,7 +199,7 @@ const Contact = () => {
                       disabled={loading}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }} >
                     <TextField
                       fullWidth
                       label="Email Address"
@@ -209,7 +209,7 @@ const Contact = () => {
                       disabled={loading}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }} >
                     <TextField
                       fullWidth
                       label="Subject"
@@ -219,7 +219,7 @@ const Contact = () => {
                       disabled={loading}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }} >
                     <TextField
                       fullWidth
                       multiline
@@ -231,7 +231,7 @@ const Contact = () => {
                       disabled={loading}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }} >
                     <Button
                       size="large"
                       type="submit"

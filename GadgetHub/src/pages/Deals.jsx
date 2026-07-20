@@ -7,21 +7,22 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import TimerIcon from '@mui/icons-material/Timer';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
-import { PRODUCTS } from '../data/products';
 import ProductCard from '../components/ProductCard';
-
-// Products with a discount
-const dealProducts = PRODUCTS.filter((p) => p.originalPrice);
+import { useProducts } from '../contexts/ProductContext';
 
 const Deals = () => {
   const navigate = useNavigate();
+  const { products } = useProducts();
+
+  // Products with a discount
+  const dealProducts = products.filter((p) => p.originalPrice);
 
   return (
     <Box>
       {/* Hero */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #FF6584 0%, #6C63FF 100%)',
+          background: 'linear-gradient(135deg, #F97316 0%, #2563EB 100%)',
           py: { xs: 6, md: 10 },
           textAlign: 'center',
           color: 'white',
@@ -50,7 +51,7 @@ const Deals = () => {
         </Typography>
         <Grid container spacing={3}>
           {dealProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
               <ProductCard product={product} />
             </Grid>
           ))}

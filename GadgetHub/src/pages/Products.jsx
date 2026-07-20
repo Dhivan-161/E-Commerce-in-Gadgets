@@ -10,7 +10,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { PRODUCTS, CATEGORIES } from '../data/products';
+import { CATEGORIES } from '../data/products';
+import { useProducts } from '../contexts/ProductContext';
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Featured' },
@@ -32,9 +33,10 @@ const Products = () => {
   const [sortBy, setSortBy] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 2500]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { products } = useProducts();
 
   const filtered = useMemo(() => {
-    let list = [...PRODUCTS];
+    let list = [...products];
     if (category !== 'all') list = list.filter((p) => p.category === category);
     if (search) list = list.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase()));
     list = list.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
@@ -45,7 +47,7 @@ const Products = () => {
       case 'name': list.sort((a, b) => a.name.localeCompare(b.name)); break;
     }
     return list;
-  }, [search, category, sortBy, priceRange]);
+  }, [products, search, category, sortBy, priceRange]);
 
   const FilterPanel = () => (
     <Box sx={{ p: isMobile ? 2 : 0 }}>
@@ -136,15 +138,15 @@ const Products = () => {
       <Grid container spacing={3}>
         {/* Sidebar */}
         {!isMobile && (
-          <Grid item md={3}>
-            <Box sx={{ position: 'sticky', top: 80, p: 2, bgcolor: 'background.paper', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+          <Grid size={{ md: 3 }} >
+            <Box sx={{ position: 'sticky', top: 80, p: 2, bgcolor: 'background.paper', backdropFilter: 'blur(16px)', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
               <FilterPanel />
             </Box>
           </Grid>
         )}
 
         {/* Product grid */}
-        <Grid item xs={12} md={9}>
+        <Grid size={{ xs: 12, md: 9 }} >
           {filtered.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 10 }}>
               <Typography variant="h5" sx={{ mb: 1 }}>No products found 😔</Typography>
@@ -156,7 +158,7 @@ const Products = () => {
           ) : (
             <Grid container spacing={3}>
               {filtered.map((product) => (
-                <Grid item xs={12} sm={6} lg={4} key={product.id}>
+                <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product.id}>
                   <ProductCard product={product} />
                 </Grid>
               ))}

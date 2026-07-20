@@ -1,0 +1,130 @@
+const Product = require('./moduls/product');
+
+const defaultProducts = [
+  {
+    id: 1,
+    name: 'Apple iPhone 15 Pro',
+    category: 'Smartphones',
+    price: 999,
+    originalPrice: 1199,
+    rating: 4.8,
+    reviews: 2341,
+    image: 'https://images.unsplash.com/photo-1757709608566-4b9fd41a7af5?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    badge: 'Best Seller',
+    description: 'The latest iPhone with A17 Pro chip, titanium design, and the most advanced camera system ever.',
+    inStock: true,
+    specs: ['A17 Pro Chip', '48MP Camera', 'Titanium Frame', '6.1" Super Retina Display'],
+  },
+  {
+    id: 2,
+    name: 'Samsung Galaxy S24 Ultra',
+    category: 'Smartphones',
+    price: 1299,
+    originalPrice: 1399,
+    rating: 4.7,
+    reviews: 1876,
+    image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80',
+    badge: 'New',
+    description: 'The ultimate Android flagship with built-in S Pen, 200MP camera, and AI-powered features.',
+    inStock: true,
+    specs: ['Snapdragon 8 Gen 3', '200MP Camera', 'S Pen Included', '6.8" Dynamic AMOLED'],
+  },
+  {
+    id: 3,
+    name: 'Sony WH-1000XM5',
+    category: 'Audio',
+    price: 349,
+    originalPrice: 399,
+    rating: 4.9,
+    reviews: 5420,
+    image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&q=80',
+    badge: 'Top Rated',
+    description: 'Industry-leading noise canceling headphones with 30-hour battery and crystal-clear call quality.',
+    inStock: true,
+    specs: ['30hr Battery', 'ANC', 'Multipoint Connect', 'Hi-Res Audio'],
+  },
+  {
+    id: 4,
+    name: 'MacBook Pro 14"',
+    category: 'Laptops',
+    price: 1999,
+    originalPrice: 2199,
+    rating: 4.9,
+    reviews: 3102,
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80',
+    badge: 'Premium',
+    description: 'Supercharged by M3 Pro chip with up to 22-hour battery, Liquid Retina XDR display.',
+    inStock: true,
+    specs: ['M3 Pro Chip', '18GB RAM', '512GB SSD', 'Liquid Retina XDR'],
+  },
+  {
+    id: 5,
+    name: 'iPad Pro 12.9"',
+    category: 'Tablets',
+    price: 1099,
+    originalPrice: 1199,
+    rating: 4.8,
+    reviews: 1567,
+    image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80',
+    badge: 'Hot',
+    description: 'The ultimate iPad experience with M2 chip, Liquid Retina XDR display and Apple Pencil support.',
+    inStock: true,
+    specs: ['M2 Chip', '12.9" Liquid Retina', 'Face ID', 'Thunderbolt / USB 4'],
+  },
+  {
+    id: 6,
+    name: 'Apple Watch Ultra 2',
+    category: 'Wearables',
+    price: 799,
+    originalPrice: 849,
+    rating: 4.7,
+    reviews: 921,
+    image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&q=80',
+    badge: 'New',
+    description: 'The most rugged and capable Apple Watch ever, built for endurance athletes and adventurers.',
+    inStock: true,
+    specs: ['S9 Chip', '60hr Battery', 'GPS + Cellular', 'Titanium Case'],
+  },
+  {
+    id: 7,
+    name: 'Dell XPS 15',
+    category: 'Laptops',
+    price: 1799,
+    originalPrice: 1999,
+    rating: 4.6,
+    reviews: 2154,
+    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&q=80',
+    badge: null,
+    description: 'Premium Windows laptop with OLED display, 12th Gen Intel Core and long battery life.',
+    inStock: true,
+    specs: ['Intel Core i7', '16GB RAM', '512GB SSD', '15.6" OLED'],
+  },
+  {
+    id: 8,
+    name: 'AirPods Pro (2nd Gen)',
+    category: 'Audio',
+    price: 249,
+    originalPrice: 279,
+    rating: 4.8,
+    reviews: 7823,
+    image: 'https://images.unsplash.com/photo-1603351154351-5e2d0600bb77?w=400&q=80',
+    badge: 'Best Seller',
+    description: 'Rebuilt from the ground up, featuring the H2 chip, Adaptive Transparency and Personalized Spatial Audio.',
+    inStock: true,
+    specs: ['H2 Chip', 'Active Noise Cancellation', '30hr Battery', 'MagSafe Charging'],
+  },
+];
+
+const seedProducts = async () => {
+  try {
+    const count = await Product.countDocuments();
+    if (count === 0) {
+      await Product.insertMany(defaultProducts);
+      console.log('Database seeded with default products successfully!');
+    }
+  } catch (error) {
+    console.error('Error seeding products:', error);
+  }
+};
+
+module.exports = { seedProducts, defaultProducts };

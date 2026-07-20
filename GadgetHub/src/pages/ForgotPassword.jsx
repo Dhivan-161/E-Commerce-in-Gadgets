@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Box, Container, Typography, TextField, Button, Card, CardContent,
   Stack, Alert, InputAdornment, CircularProgress, Link as MuiLink
@@ -42,9 +42,7 @@ const ForgotPassword = () => {
         minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
-        background: (theme) => theme.palette.mode === 'dark'
-          ? 'radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.08) 0%, rgba(10, 10, 15, 1) 90%)'
-          : 'radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.04) 0%, rgba(248, 249, 255, 1) 90%)',
+        background: 'transparent',
         py: 8,
       }}
     >
@@ -60,7 +58,7 @@ const ForgotPassword = () => {
               left: -2,
               right: -2,
               bottom: -2,
-              background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+              background: 'linear-gradient(135deg, #2563EB 0%, #F97316 100%)',
               borderRadius: 'inherit',
               zIndex: -1,
               opacity: 0.5,

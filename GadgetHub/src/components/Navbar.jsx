@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, Badge, Box,
   InputBase, Drawer, List, ListItem, ListItemText, Divider,
@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useThemeMode } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import { getHealth } from '../services/api';
 
 const NAV_LINKS = [
   { label: 'Home', path: '/' },
@@ -36,6 +37,25 @@ const Navbar = ({ onSearch }) => {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [dbConnected, setDbConnected] = useState(true);
+
+  useEffect(() => {
+    const checkDb = async () => {
+      try {
+        const health = await getHealth();
+        if (health && health.database !== 'Connected') {
+          setDbConnected(false);
+        } else {
+          setDbConnected(true);
+        }
+      } catch (err) {
+        setDbConnected(false);
+      }
+    };
+    checkDb();
+    const interval = setInterval(checkDb, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = (e) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
@@ -46,13 +66,58 @@ const Navbar = ({ onSearch }) => {
 
   return (
     <>
+      {!dbConnected && (
+        <Box sx={{
+          background: 'linear-gradient(90deg, #F59E0B, #EF4444)',
+          color: '#ffffff',
+          px: 2,
+          py: 1,
+          textAlign: 'center',
+          fontWeight: 600,
+          fontSize: '0.85rem',
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 1.5,
+          boxShadow: '0 4px 10px rgba(239, 68, 68, 0.25)',
+          position: 'relative',
+          zIndex: 1201,
+        }}>
+          <span>⚠️ <strong>MongoDB Disconnected:</strong> Could not connect to MongoDB Atlas. Your IP address may not be whitelisted.</span>
+          <Button
+            href="https://cloud.mongodb.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="contained"
+            size="small"
+            sx={{
+              bgcolor: 'rgba(255,255,255,0.2)',
+              color: '#ffffff',
+              boxShadow: 'none',
+              textTransform: 'none',
+              fontWeight: 700,
+              fontSize: '0.75rem',
+              py: 0.2,
+              px: 1.5,
+              '&:hover': {
+                bgcolor: 'rgba(255,255,255,0.3)',
+                boxShadow: 'none',
+              }
+            }}
+          >
+            Manage Whitelist
+          </Button>
+        </Box>
+      )}
+
       <HideOnScroll>
         <AppBar
           position="sticky"
           elevation={0}
           sx={{
-            bgcolor: mode === 'dark' ? 'rgba(18,18,26,0.95)' : 'rgba(255,255,255,0.95)',
-            backdropFilter: 'blur(12px)',
+            bgcolor: mode === 'dark' ? 'rgba(18,18,26,0.7)' : 'rgba(255,255,255,0.7)',
+            backdropFilter: 'blur(20px)',
             borderBottom: '1px solid',
             borderColor: 'divider',
             color: 'text.primary',
@@ -67,9 +132,9 @@ const Navbar = ({ onSearch }) => {
               <FlashOnIcon sx={{ color: 'primary.main', fontSize: 28 }} />
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #6C63FF, #FF6584)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #2563EB, #06B6D4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
               >
-                GadgetHub
+                1% Battery
               </Typography>
             </Box>
 

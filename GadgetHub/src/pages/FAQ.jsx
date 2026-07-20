@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import {
   Box, Container, Typography, TextField, Tabs, Tab, Accordion,
   AccordionSummary, AccordionDetails, Card, CardContent, Button, Stack,
@@ -12,28 +12,28 @@ import { useNavigate } from 'react-router-dom';
 const FAQS = [
   {
     category: 'general',
-    question: 'Are the products on GadgetHub authentic and brand new?',
-    answer: 'Absolutely. Every gadget, laptop, smartphone, or accessory sold on GadgetHub is 100% authentic, brand new, and sourced directly from manufacturers or authorized global distributors. They all come in their original factory packaging with manufacturer warranties.'
+    question: 'Are the products on 1% Battery authentic and brand new?',
+    answer: 'Absolutely. Every gadget, laptop, smartphone, or accessory sold on 1% Battery is 100% authentic, brand new, and sourced directly from manufacturers or authorized global distributors. They all come in their original factory packaging with manufacturer warranties.'
   },
   {
     category: 'general',
     question: 'Do I need to register for an account to place an order?',
-    answer: 'While you can check out as a guest, we highly recommend creating an account. Having a GadgetHub account allows you to securely save payment details, view order histories, track shipments in real-time, and collect loyalty reward points for future discounts.'
+    answer: 'While you can check out as a guest, we highly recommend creating an account. Having a 1% Battery account allows you to securely save payment details, view order histories, track shipments in real-time, and collect loyalty reward points for future discounts.'
   },
   {
     category: 'general',
     question: 'How do I contact customer support?',
-    answer: 'You can reach out to us at any time via our Contact page. We also offer email support (support@gadgethub.tech) and a toll-free customer hotline (+1 (800) 555-0199) active Monday through Friday, 9:00 AM to 6:00 PM EST.'
+    answer: 'You can reach out to us at any time via our Contact page. We also offer email support (support@1% Battery.tech) and a toll-free customer hotline (+1 (800) 555-0199) active Monday through Friday, 9:00 AM to 6:00 PM EST.'
   },
   {
     category: 'shipping',
     question: 'How much does shipping cost?',
-    answer: 'We offer FREE standard shipping on all orders over $50 within the continental United States. For orders below $50, a flat-rate shipping fee of $9.99 is applied at checkout. Express or overnight delivery rates are calculated based on your address.'
+    answer: 'We offer FREE standard shipping on all orders over ₹4,999 within the continental United States. For orders below ₹4,999, a flat-rate shipping fee of ₹499 is applied at checkout. Express or overnight delivery rates are calculated based on your address.'
   },
   {
     category: 'shipping',
     question: 'Do you ship internationally?',
-    answer: 'Yes, GadgetHub ships to over 30 countries worldwide. International shipping charges and customs fees are calculated at checkout based on the destination. Delivery times typically range between 7 to 15 business days depending on customs processing.'
+    answer: 'Yes, 1% Battery ships to over 30 countries worldwide. International shipping charges and customs fees are calculated at checkout based on the destination. Delivery times typically range between 7 to 15 business days depending on customs processing.'
   },
   {
     category: 'shipping',
@@ -53,7 +53,7 @@ const FAQS = [
   {
     category: 'returns',
     question: 'Do products come with a warranty?',
-    answer: 'Yes, all electronic devices and gadgets purchased on GadgetHub are covered by their respective manufacturer warranties. This warranty duration is typically 1 year but can vary by brand and product type. Check the product details page for specific information.'
+    answer: 'Yes, all electronic devices and gadgets purchased on 1% Battery are covered by their respective manufacturer warranties. This warranty duration is typically 1 year but can vary by brand and product type. Check the product details page for specific information.'
   },
   {
     category: 'payments',
@@ -62,13 +62,13 @@ const FAQS = [
   },
   {
     category: 'payments',
-    question: 'Is it safe to use my credit card on GadgetHub?',
+    question: 'Is it safe to use my credit card on 1% Battery?',
     answer: 'Security is our top priority. We use industry-standard Secure Sockets Layer (SSL) encryption protocol to protect your personal information and credit card details. We do not store full credit card numbers on our servers; payments are processed securely via Stripe or PayPal.'
   },
   {
     category: 'payments',
     question: 'Can I apply multiple discount codes at checkout?',
-    answer: 'Only one promo code or coupon code can be applied per order. However, promo codes can generally be combined with auto-applied free shipping discounts if your order subtotal is over $50.'
+    answer: 'Only one promo code or coupon code can be applied per order. However, promo codes can generally be combined with auto-applied free shipping discounts if your order subtotal is over ₹4,999.'
   }
 ];
 

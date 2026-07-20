@@ -1,90 +1,67 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { registerUser as apiRegister, loginUser as apiLogin, getToken, setToken, removeToken } from '../services/api';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+// ─── Decode a JWT payload (no verification — server handles that) ──────────────
+const decodeToken = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload;
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize and load state from localStorage
+  // ── Rehydrate session from stored token on mount ────────────────────────────
   useEffect(() => {
-    // 1. Ensure a default mock user exists for testing if no users exist
-    const savedUsers = localStorage.getItem('gadgethub_users');
-    if (!savedUsers) {
-      const defaultUsers = [
-        { name: 'John Doe', email: 'user@example.com', password: 'password123' }
-      ];
-      localStorage.setItem('gadgethub_users', JSON.stringify(defaultUsers));
-    }
-
-    // 2. Load current session
-    const session = localStorage.getItem('gadgethub_session');
-    if (session) {
-      try {
-        setCurrentUser(JSON.parse(session));
-      } catch (e) {
-        console.error('Error loading session:', e);
+    const token = getToken();
+    if (token) {
+      const decoded = decodeToken(token);
+      if (decoded && decoded.exp * 1000 > Date.now()) {
+        // Token is still valid — restore session from token payload
+        setCurrentUser({
+          id: decoded.id,
+          isAdmin: decoded.isAdmin,
+        });
+      } else {
+        // Token expired — clear it
+        removeToken();
       }
     }
     setLoading(false);
   }, []);
 
-  // Sign up a new user
-  const signup = (name, email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const savedUsers = JSON.parse(localStorage.getItem('gadgethub_users') || '[]');
-          const emailExists = savedUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
-
-          if (emailExists) {
-            reject(new Error('An account with this email address already exists.'));
-            return;
-          }
-
-          const newUser = { name, email, password };
-          const updatedUsers = [...savedUsers, newUser];
-          localStorage.setItem('gadgethub_users', JSON.stringify(updatedUsers));
-          resolve(newUser);
-        } catch (error) {
-          reject(new Error('Failed to register. Please try again.'));
-        }
-      }, 1000);
-    });
+  // ── Sign up — calls the real backend API ────────────────────────────────────
+  const signup = async (name, email, password, confirmPassword, agreeTerms) => {
+    const data = await apiRegister({ name, email, password, confirmPassword, agreeTerms });
+    // Store token but don't auto-login (redirect to sign in)
+    setToken(data.token);
+    return data;
   };
 
-  // Sign in an existing user
-  const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const savedUsers = JSON.parse(localStorage.getItem('gadgethub_users') || '[]');
-          const user = savedUsers.find(
-            u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-          );
-
-          if (!user) {
-            reject(new Error('Invalid email or password.'));
-            return;
-          }
-
-          // Exclude password from current session state
-          const sessionUser = { name: user.name, email: user.email };
-          localStorage.setItem('gadgethub_session', JSON.stringify(sessionUser));
-          setCurrentUser(sessionUser);
-          resolve(sessionUser);
-        } catch (error) {
-          reject(new Error('Failed to log in. Please try again.'));
-        }
-      }, 1000);
+  // ── Sign in — calls the real backend API ────────────────────────────────────
+  const login = async (email, password) => {
+    const data = await apiLogin({ email, password });
+    setToken(data.token);
+    setCurrentUser({
+      id: data.user.id,
+      name: data.user.name,
+      email: data.user.email,
+      isAdmin: data.user.isAdmin,
     });
+    return data;
   };
 
-  // Log out the user
+  // ── Log out ─────────────────────────────────────────────────────────────────
   const logout = () => {
-    localStorage.removeItem('gadgethub_session');
+    removeToken();
     setCurrentUser(null);
   };
 
@@ -93,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     login,
     logout,
-    loading
+    loading,
   };
 
   return (

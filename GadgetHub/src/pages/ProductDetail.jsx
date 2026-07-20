@@ -11,20 +11,21 @@ import ShareIcon from '@mui/icons-material/Share';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
-import { PRODUCTS } from '../data/products';
+import { useProducts } from '../contexts/ProductContext';
 import ProductCard from '../components/ProductCard';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { products } = useProducts();
   const [wished, setWished] = useState(false);
   const [tab, setTab] = useState(0);
   const [added, setAdded] = useState(false);
   const [qty, setQty] = useState(1);
 
-  const product = PRODUCTS.find((p) => p.id === Number(id));
-  const related = PRODUCTS.filter((p) => p.category === product?.category && p.id !== product?.id).slice(0, 4);
+  const product = products.find((p) => p.id === Number(id));
+  const related = products.filter((p) => p.category === product?.category && p.id !== product?.id).slice(0, 4);
 
   if (!product) {
     return (
@@ -54,8 +55,8 @@ const ProductDetail = () => {
 
       <Grid container spacing={5}>
         {/* Image */}
-        <Grid item xs={12} md={6}>
-          <Box sx={{ position: 'relative', borderRadius: 4, overflow: 'hidden', bgcolor: 'background.paper', p: 2, boxShadow: 3 }}>
+        <Grid size={{ xs: 12, md: 6 }} >
+          <Box sx={{ position: 'relative', borderRadius: 4, overflow: 'hidden', bgcolor: 'background.paper', backdropFilter: 'blur(16px)', border: '1px solid', borderColor: 'divider', p: 2, boxShadow: 3 }}>
             {product.badge && (
               <Chip label={product.badge} color="primary" size="small" sx={{ position: 'absolute', top: 16, left: 16, zIndex: 1, fontWeight: 700 }} />
             )}
@@ -72,7 +73,7 @@ const ProductDetail = () => {
         </Grid>
 
         {/* Details */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }} >
           <Typography variant="overline" color="primary.main" sx={{ fontWeight: 700 }}>
             {product.category}
           </Typography>
@@ -89,11 +90,11 @@ const ProductDetail = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 1 }}>
             <Typography variant="h3" color="primary.main" sx={{ fontWeight: 800 }}>
-              ${product.price}
+              ₹{product.price}
             </Typography>
             {product.originalPrice && (
               <Typography variant="h6" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                ${product.originalPrice}
+                ₹{product.originalPrice}
               </Typography>
             )}
             {discount && (
@@ -196,7 +197,7 @@ const ProductDetail = () => {
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Related Products</Typography>
           <Grid container spacing={3}>
             {related.map((p) => (
-              <Grid item xs={12} sm={6} md={3} key={p.id}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={p.id}>
                 <ProductCard product={p} />
               </Grid>
             ))}

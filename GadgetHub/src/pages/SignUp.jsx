@@ -11,7 +11,6 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useAuth } from '../contexts/AuthContext';
-
 const SignUp = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
@@ -25,15 +24,11 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-
   const handleTogglePassword = () => setShowPassword(!showPassword);
   const handleToggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-
-    // Validations
     if (!name.trim()) {
       setError('Name is required');
       return;
@@ -65,7 +60,7 @@ const SignUp = () => {
 
     setLoading(true);
 
-    signup(name, email, password)
+    signup(name, email, password, confirmPassword, agreeTerms)
       .then(() => {
         setLoading(false);
         setSuccess(true);
@@ -78,16 +73,13 @@ const SignUp = () => {
         setError(err.message || 'Failed to register');
       });
   };
-
   return (
     <Box
       sx={{
         minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
-        background: (theme) => theme.palette.mode === 'dark'
-          ? 'radial-gradient(circle at 10% 20%, rgba(255, 101, 132, 0.08) 0%, rgba(10, 10, 15, 1) 90%)'
-          : 'radial-gradient(circle at 10% 20%, rgba(255, 101, 132, 0.04) 0%, rgba(248, 249, 255, 1) 90%)',
+        background: 'transparent',
         py: 8,
       }}
     >
@@ -103,7 +95,7 @@ const SignUp = () => {
               left: -2,
               right: -2,
               bottom: -2,
-              background: 'linear-gradient(135deg, #FF6584 0%, #6C63FF 100%)',
+              background: 'linear-gradient(135deg, #F97316 0%, #2563EB 100%)',
               borderRadius: 'inherit',
               zIndex: -1,
               opacity: 0.5,
@@ -243,7 +235,7 @@ const SignUp = () => {
                   type="submit"
                   variant="contained"
                   disabled={loading || success}
-                  sx={{ py: 1.5, fontSize: '1rem', background: 'linear-gradient(135deg, #FF6584 0%, #6C63FF 100%)' }}
+                  sx={{ py: 1.5, fontSize: '1rem', background: 'linear-gradient(135deg, #F97316 0%, #2563EB 100%)' }}
                 >
                   {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
                 </Button>
@@ -268,5 +260,4 @@ const SignUp = () => {
     </Box>
   );
 };
-
 export default SignUp;

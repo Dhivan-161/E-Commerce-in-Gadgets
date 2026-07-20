@@ -17,7 +17,7 @@ const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   const navigate = useNavigate();
 
-  const shipping = cartTotal >= 50 ? 0 : 9.99;
+  const shipping = cartTotal >= 4999 ? 0 : 499;
   const tax = cartTotal * 0.08;
   const total = cartTotal + shipping + tax;
 
@@ -42,19 +42,19 @@ const Cart = () => {
         Shopping Cart ({cart.reduce((s, i) => s + i.quantity, 0)} items)
       </Typography>
 
-      {cartTotal >= 50 && (
+      {cartTotal >= 4999 && (
         <Alert
           icon={<LocalShippingIcon />}
           severity="success"
           sx={{ mb: 3, borderRadius: 3 }}
         >
-          🎉 You qualify for FREE shipping!
+          ?? You qualify for FREE shipping!
         </Alert>
       )}
 
       <Grid container spacing={4}>
         {/* Cart items */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }} >
           <Stack spacing={2}>
             {cart.map((item) => (
               <Card key={item.id} sx={{ p: 2 }}>
@@ -76,7 +76,7 @@ const Cart = () => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">{item.category}</Typography>
                     <Typography variant="subtitle1" color="primary.main" sx={{ fontWeight: 700, mt: 0.5 }}>
-                      ${item.price}
+                      ?{item.price}
                     </Typography>
                   </Box>
 
@@ -95,7 +95,7 @@ const Cart = () => {
 
                   <Box sx={{ textAlign: 'right', minWidth: 80 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ?{(item.price * item.quantity).toFixed(2)}
                     </Typography>
                     <IconButton
                       size="small"
@@ -122,30 +122,30 @@ const Cart = () => {
         </Grid>
 
         {/* Order Summary */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }} >
           <Card sx={{ p: 3, position: 'sticky', top: 80 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Order Summary</Typography>
 
             <Stack spacing={1.5}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Subtotal</Typography>
-                <Typography sx={{ fontWeight: 600 }}>${cartTotal.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>?{cartTotal.toFixed(2)}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Shipping</Typography>
                 <Typography sx={{ fontWeight: 600, color: shipping === 0 ? 'success.main' : 'inherit' }}>
-                  {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                  {shipping === 0 ? 'FREE' : `?${shipping.toFixed(2)}`}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Tax (8%)</Typography>
-                <Typography sx={{ fontWeight: 600 }}>${tax.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>?{tax.toFixed(2)}</Typography>
               </Box>
             </Stack>
 
-            {cartTotal < 50 && (
+            {cartTotal < 4999 && (
               <Alert severity="info" sx={{ mt: 2, borderRadius: 2, fontSize: '0.8rem' }}>
-                Add ${(50 - cartTotal).toFixed(2)} more for free shipping!
+                Add ?${(4999 - cartTotal).toFixed(2)} more for free shipping!
               </Alert>
             )}
 
@@ -153,7 +153,7 @@ const Cart = () => {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>Total</Typography>
-              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>${total.toFixed(2)}</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>?{total.toFixed(2)}</Typography>
             </Box>
 
             {/* Promo code */}

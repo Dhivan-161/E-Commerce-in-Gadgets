@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 
 const CartContext = createContext(null);
 
@@ -33,18 +33,7 @@ const cartReducer = (state, action) => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, [], () => {
-    try {
-      const saved = localStorage.getItem('gadgethub-cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem('gadgethub-cart', JSON.stringify(cart));
-  }, [cart]);
+  const [cart, dispatch] = useReducer(cartReducer, []);
 
   const addToCart = (product) => dispatch({ type: 'ADD_TO_CART', payload: product });
   const removeFromCart = (id) => dispatch({ type: 'REMOVE_FROM_CART', payload: id });

@@ -15,6 +15,13 @@ import Terms from '../pages/Terms';
 import FAQ from '../pages/FAQ';
 import NotFound from '../pages/NotFound';
 
+import AdminRoute from './AdminRoute';
+import AdminLayout from '../layouts/AdminLayout';
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminProducts from '../pages/admin/AdminProducts';
+import AdminOrders from '../pages/admin/AdminOrders';
+import AdminUsers from '../pages/admin/AdminUsers';
+
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Home />} />
@@ -30,6 +37,17 @@ const AppRoutes = () => (
     <Route path="/contact" element={<Contact />} />
     <Route path="/terms" element={<Terms />} />
     <Route path="/faq" element={<FAQ />} />
+
+    {/* Admin Routes */}
+    <Route path="/admin" element={<AdminRoute />}>
+      <Route element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="users" element={<AdminUsers />} />
+      </Route>
+    </Route>
+
     <Route path="*" element={<NotFound />} />
   </Routes>
 );

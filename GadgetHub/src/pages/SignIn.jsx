@@ -12,7 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useAuth } from '../contexts/AuthContext';
-
 const SignIn = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -22,14 +21,10 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-
   const handleTogglePassword = () => setShowPassword(!showPassword);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-
-    // Basic Validation
     if (!email) {
       setError('Email is required');
       return;
@@ -46,7 +41,6 @@ const SignIn = () => {
       setError('Password must be at least 6 characters');
       return;
     }
-
     setLoading(true);
 
     login(email, password)
@@ -69,9 +63,7 @@ const SignIn = () => {
         minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
-        background: (theme) => theme.palette.mode === 'dark'
-          ? 'radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.08) 0%, rgba(10, 10, 15, 1) 90%)'
-          : 'radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.04) 0%, rgba(248, 249, 255, 1) 90%)',
+        background: 'transparent',
         py: 8,
       }}
     >
@@ -87,7 +79,7 @@ const SignIn = () => {
               left: -2,
               right: -2,
               bottom: -2,
-              background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+              background: 'linear-gradient(135deg, #2563EB 0%, #F97316 100%)',
               borderRadius: 'inherit',
               zIndex: -1,
               opacity: 0.5,
@@ -191,7 +183,7 @@ const SignIn = () => {
             </Divider>
 
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }} >
                 <Button
                   fullWidth
                   variant="outlined"
@@ -214,7 +206,7 @@ const SignIn = () => {
                   Google
                 </Button>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }} >
                 <Button
                   fullWidth
                   variant="outlined"
@@ -257,5 +249,4 @@ const SignIn = () => {
     </Box>
   );
 };
-
 export default SignIn;

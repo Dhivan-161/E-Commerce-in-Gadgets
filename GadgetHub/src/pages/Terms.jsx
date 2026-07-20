@@ -7,23 +7,20 @@ import SecurityIcon from '@mui/icons-material/Security';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
 const Terms = () => {
   const [activeTab, setActiveTab] = useState(0);
-
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
   const SECTIONS = [
     {
       title: 'Introduction & Agreement',
       icon: <GavelIcon />,
       content: (
         <>
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>1. Welcome to GadgetHub</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>1. Welcome to 1% Battery</Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            These Terms and Conditions govern your use of the GadgetHub website located at gadgethub.tech and all related services, products, tools, and content provided by GadgetHub.
+            These Terms and Conditions govern your use of the 1% Battery website located at 1% Battery.tech and all related services, products, tools, and content provided by 1% Battery.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
             By accessing or using our website, purchasing gadgets, or engaging with our service, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree, you must immediately cease using the website.
@@ -44,10 +41,10 @@ const Terms = () => {
             To access certain features of the website, including checking out or viewing order histories, you may be required to register for an account. You agree to provide accurate, current, and complete information during registration.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            You are entirely responsible for maintaining the confidentiality of your account credentials (username and password) and for all activities that occur under your account. You agree to immediately notify GadgetHub of any unauthorized account activity or security breach.
+            You are entirely responsible for maintaining the confidentiality of your account credentials (username and password) and for all activities that occur under your account. You agree to immediately notify 1% Battery of any unauthorized account activity or security breach.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            GadgetHub will not be liable for any losses or damages caused by any unauthorized use of your account. We reserve the right to suspend or terminate accounts that violate these terms or engage in fraudulent, harmful, or illegal activities.
+            1% Battery will not be liable for any losses or damages caused by any unauthorized use of your account. We reserve the right to suspend or terminate accounts that violate these terms or engage in fraudulent, harmful, or illegal activities.
           </Typography>
         </>
       )
@@ -62,7 +59,7 @@ const Terms = () => {
             We make every effort to display the colors, specifications, and descriptions of tech items as accurately as possible. However, we do not warrant that product descriptions or other site content are fully error-free, complete, or reliable.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            All prices are shown in USD and are subject to change without notice. Shipping fees and sales tax will be calculated and displayed at checkout where applicable. Free shipping offers are only valid for orders exceeding $50.
+            All prices are shown in INR (?) and are subject to change without notice. Shipping fees and sales tax will be calculated and displayed at checkout where applicable. Free shipping offers are only valid for orders exceeding ?4,999.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
             By submitting an order, you authorize us to charge your selected payment method (Credit Card, Debit Card, PayPal, etc.). We reserve the right to refuse or cancel any order for reasons including stock limitations, product errors, pricing mistakes, or suspected fraudulent activity.
@@ -77,10 +74,10 @@ const Terms = () => {
         <>
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>4. Ownership and Intellectual Property</Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            The GadgetHub website, along with its original content, logos, layout designs, software, custom graphics, texts, icons, images, and videos are the exclusive property of GadgetHub and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+            The 1% Battery website, along with its original content, logos, layout designs, software, custom graphics, texts, icons, images, and videos are the exclusive property of 1% Battery and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            You are granted a limited, non-exclusive, non-transferable, and revocable license to access our platform for personal and shopping purposes only. You may not copy, modify, distribute, publish, reverse-engineer, or commercially exploit any material without prior written permission from GadgetHub.
+            You are granted a limited, non-exclusive, non-transferable, and revocable license to access our platform for personal and shopping purposes only. You may not copy, modify, distribute, publish, reverse-engineer, or commercially exploit any material without prior written permission from 1% Battery.
           </Typography>
         </>
       )
@@ -92,10 +89,10 @@ const Terms = () => {
         <>
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>5. Limitation of Liability & Warranty</Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            GadgetHub is provided on an "AS IS" and "AS AVAILABLE" basis. We make no representations or warranties of any kind, express or implied, regarding the website operation, information accuracy, product availability, or shipping timelines.
+            1% Battery is provided on an "AS IS" and "AS AVAILABLE" basis. We make no representations or warranties of any kind, express or implied, regarding the website operation, information accuracy, product availability, or shipping timelines.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
-            In no event shall GadgetHub, its directors, employees, partners, or suppliers be liable for any indirect, incidental, special, consequential, or punitive damages (including loss of profits, data, use, or goodwill) arising out of your access to or use of the website.
+            In no event shall 1% Battery, its directors, employees, partners, or suppliers be liable for any indirect, incidental, special, consequential, or punitive damages (including loss of profits, data, use, or goodwill) arising out of your access to or use of the website.
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8 }}>
             These limitations apply to the maximum extent permitted by applicable laws. Certain state laws do not allow limitations on implied warranties or exclusions of specific damages.
@@ -132,7 +129,7 @@ const Terms = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Sidebar Tabs */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }} >
             <Card sx={{ position: 'sticky', top: 90 }}>
               <CardContent sx={{ p: 2 }}>
                 <Typography variant="subtitle2" sx={{ px: 2, pb: 2, fontWeight: 700 }} color="text.secondary">
@@ -178,7 +175,7 @@ const Terms = () => {
           </Grid>
 
           {/* Details Content */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }} >
             <Card>
               <CardContent sx={{ p: { xs: 3, md: 5 } }}>
                 {SECTIONS[activeTab].content}
@@ -190,5 +187,4 @@ const Terms = () => {
     </Box>
   );
 };
-
 export default Terms;
