@@ -75,7 +75,7 @@ const smartApiProxyPlugin = () => ({
           path: req.url,
           method: req.method,
           headers: req.headers,
-          timeout: 250,
+          timeout: 5000,
         },
         (backendRes) => {
           res.writeHead(backendRes.statusCode || 200, backendRes.headers);
