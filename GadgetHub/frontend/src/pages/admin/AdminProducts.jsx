@@ -349,7 +349,7 @@ const AdminProducts = () => {
           <DialogContent dividers>
             <Stack spacing={2.5}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12}>
                   <TextField 
                     label="Product Name" 
                     name="name" 
@@ -359,20 +359,6 @@ const AdminProducts = () => {
                     fullWidth 
                     placeholder="e.g. Sony WH-1000XM5 Wireless Headphones"
                   />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField 
-                    select 
-                    label="Category" 
-                    name="category" 
-                    value={form.category} 
-                    onChange={handleChange} 
-                    fullWidth
-                  >
-                    {CATEGORIES.filter(c => c.id !== 'all').map(c => (
-                      <MenuItem key={c.id} value={c.id}>{c.label}</MenuItem>
-                    ))}
-                  </TextField>
                 </Grid>
               </Grid>
 
