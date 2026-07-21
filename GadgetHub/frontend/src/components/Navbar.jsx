@@ -21,6 +21,8 @@ const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'Products', path: '/products' },
   { label: 'Deals', path: '/deals' },
+  { label: 'Student Deals', path: '/student-deals' },
+  { label: 'Setup', path: '/setup' },
   { label: 'About', path: '/about' },
 ];
 

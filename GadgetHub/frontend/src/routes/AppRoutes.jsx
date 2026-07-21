@@ -6,6 +6,8 @@ import ProductDetail from '../pages/ProductDetail';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Deals from '../pages/Deals';
+import StudentDeals from '../pages/StudentDeals';
+import Setup from '../pages/Setup';
 import About from '../pages/About';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
@@ -31,6 +33,8 @@ const AppRoutes = () => (
     <Route path="/cart" element={<Cart />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/deals" element={<Deals />} />
+    <Route path="/student-deals" element={<StudentDeals />} />
+    <Route path="/setup" element={<Setup />} />
     <Route path="/about" element={<About />} />
     <Route path="/signin" element={<SignIn />} />
     <Route path="/signup" element={<SignUp />} />
