@@ -105,32 +105,26 @@ const AdminProducts = () => {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
     
-    try {
-      // Direct fetch to bypass central request logic which assumes JSON
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-      if (res.ok) {
-        const imageUrl = await res.text();
-        setForm(prev => ({ ...prev, image: imageUrl }));
-        setSnackbar({ open: true, message: 'Image uploaded successfully!', severity: 'success' });
-      } else {
-        throw new Error('Upload failed');
-      }
-    } catch (err) {
-      setSnackbar({ open: true, message: 'Failed to upload image', severity: 'error' });
-    } finally {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target.result;
+      setForm(prev => ({ ...prev, image: base64Url }));
+      setSnackbar({ open: true, message: 'Image added successfully!', severity: 'success' });
       setIsUploading(false);
-    }
+    };
+    
+    reader.onerror = () => {
+      setSnackbar({ open: true, message: 'Failed to read image', severity: 'error' });
+      setIsUploading(false);
+    };
+    
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
