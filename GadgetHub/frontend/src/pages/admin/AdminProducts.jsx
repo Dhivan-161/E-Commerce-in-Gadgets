@@ -74,10 +74,10 @@ const AdminProducts = () => {
   }, [products, searchQuery, selectedCategoryFilter]);
 
   const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
+    if (window.confirm(`Are you sure you want to delete "₹{name}"?`)) {
       try {
         await deleteProduct(id);
-        setSnackbar({ open: true, message: `Product "${name}" deleted successfully`, severity: 'info' });
+        setSnackbar({ open: true, message: `Product "₹{name}" deleted successfully`, severity: 'info' });
       } catch (err) {
         setSnackbar({ open: true, message: 'Failed to delete product', severity: 'error' });
       }
@@ -161,10 +161,10 @@ const AdminProducts = () => {
     try {
       if (editingId) {
         await updateProduct(editingId, productData);
-        setSnackbar({ open: true, message: `Product "${form.name}" updated successfully!`, severity: 'success' });
+        setSnackbar({ open: true, message: `Product "₹{form.name}" updated successfully!`, severity: 'success' });
       } else {
         await addProduct(productData);
-        setSnackbar({ open: true, message: `New Product "${form.name}" added successfully!`, severity: 'success' });
+        setSnackbar({ open: true, message: `New Product "₹{form.name}" added successfully!`, severity: 'success' });
       }
       handleClose();
     } catch (err) {
@@ -322,10 +322,10 @@ const AdminProducts = () => {
                       <Chip label={product.category} size="small" variant="outlined" color="primary" />
                     </TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>
-                      ${product.price}
+                      ₹{product.price}
                       {product.originalPrice && (
                         <Typography component="span" variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through', ml: 1 }}>
-                          ${product.originalPrice}
+                          ₹{product.originalPrice}
                         </Typography>
                       )}
                     </TableCell>
@@ -398,7 +398,7 @@ const AdminProducts = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                   <TextField 
-                    label="Price ($)" 
+                    label="Price (₹)" 
                     name="price" 
                     type="number" 
                     value={form.price} 
@@ -410,7 +410,7 @@ const AdminProducts = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField 
-                    label="Original Price ($)" 
+                    label="Original Price (₹)" 
                     name="originalPrice" 
                     type="number" 
                     value={form.originalPrice} 

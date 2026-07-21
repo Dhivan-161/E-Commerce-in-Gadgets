@@ -20,7 +20,7 @@ import { sendChatbotMessage } from '../services/api';
 
 const DEFAULT_SUGGESTIONS = [
   '⚡ Best laptops for coding',
-  '📱 Phones under $1000',
+  '📱 Phones under ₹1000',
   '⚔️ iPhone vs Samsung',
   '🎧 Best ANC headphones',
   '📦 Order & shipping info'
@@ -262,10 +262,10 @@ const AIChatbot = () => {
                                 {product.name}
                               </Typography>
                               <Typography variant="caption" color="primary.main" sx={{ fontWeight: 800 }}>
-                                ${product.price}
+                                ₹{product.price}
                                 {product.originalPrice && (
                                   <Typography component="span" variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through', ml: 0.8 }}>
-                                    ${product.originalPrice}
+                                    ₹{product.originalPrice}
                                   </Typography>
                                 )}
                               </Typography>

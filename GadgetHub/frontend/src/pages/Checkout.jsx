@@ -189,7 +189,7 @@ const Checkout = () => {
                       <Typography variant="body2" color="text.secondary">Qty: {item.quantity}</Typography>
                     </Box>
                     <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ₹{(item.price * item.quantity).toFixed(2)}
                     </Typography>
                   </Box>
                 ))}
@@ -198,7 +198,7 @@ const Checkout = () => {
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <Button variant="outlined" onClick={() => setStep(1)}>Back</Button>
                 <Button variant="contained" color="success" onClick={handlePlaceOrder} sx={{ flex: 1, py: 1.5 }}>
-                  Place Order — ${total.toFixed(2)}
+                  Place Order — ₹{total.toFixed(2)}
                 </Button>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, mt: 2 }}>

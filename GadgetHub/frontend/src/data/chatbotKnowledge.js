@@ -6,7 +6,7 @@ export const STORE_FAQ_KNOWLEDGE = {
   shipping: {
     keywords: ['shipping', 'delivery', 'dispatch', 'courier', 'arrive', 'deliver'],
     title: '🚚 Shipping & Delivery Information',
-    answer: `• **Standard Shipping**: 2-4 business days (FREE on orders over $50).\n• **Express Delivery**: 1-2 business days available at checkout.\n• **International Shipping**: Available to 30+ countries.\n• All orders include real-time tracking numbers sent via Email & SMS.`
+    answer: `• **Standard Shipping**: 2-4 business days (FREE on orders over ₹50).\n• **Express Delivery**: 1-2 business days available at checkout.\n• **International Shipping**: Available to 30+ countries.\n• All orders include real-time tracking numbers sent via Email & SMS.`
   },
   tracking: {
     keywords: ['track', 'order status', 'where is my order', 'tracking number', 'check order'],
@@ -101,7 +101,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
   let matchedProducts = [];
   let quickSuggestions = [];
 
-  // 1. Extract Price Constraints (e.g. "under 1000", "under $500", "below 300")
+  // 1. Extract Price Constraints (e.g. "under 1000", "under ₹500", "below 300")
   const priceMatch = text.match(/(?:under|below|less than|\$|<)\s*(\d+)/i);
   const maxPrice = priceMatch ? parseFloat(priceMatch[1]) : null;
 
@@ -109,7 +109,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
   for (const [key, faq] of Object.entries(STORE_FAQ_KNOWLEDGE)) {
     if (faq.keywords.some(kw => text.includes(kw))) {
       return {
-        text: `${faq.title}\n\n${faq.answer}`,
+        text: `₹{faq.title}\n\n${faq.answer}`,
         products: [],
         suggestions: ['⚡ Show top deals', '📱 View smartphones', '💻 View laptops']
       };
@@ -148,7 +148,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
 
       matchedProducts = candidateProducts.slice(0, 3);
       return {
-        text: `${guide.title}\n\n${guide.advice}`,
+        text: `₹{guide.title}\n\n${guide.advice}`,
         products: matchedProducts.length > 0 ? matchedProducts : storeProducts.slice(0, 2),
         suggestions: ['🔥 View deals', '🎧 Best audio gear', '💳 Payment options']
       };
@@ -176,8 +176,8 @@ export const trainedBotEngine = (userInput, storeProducts) => {
 
     if (pool.length > 0) {
       matchedProducts = pool.slice(0, 3);
-      const priceText = maxPrice ? ` under $${maxPrice}` : '';
-      const catText = matchedCategory ? ` in ${matchedCategory}` : ' gadgets';
+      const priceText = maxPrice ? ` under ₹${maxPrice}` : '';
+      const catText = matchedCategory ? ` in ₹{matchedCategory}` : ' gadgets';
       responseText = `Here are top recommendations${catText}${priceText}:`;
     } else {
       matchedProducts = storeProducts.slice(0, 2);
@@ -202,7 +202,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
     ).slice(0, 3);
 
     return {
-      text: `Here are matching ${matchedBrand.toUpperCase()} products from our inventory:`,
+      text: `Here are matching ₹{matchedBrand.toUpperCase()} products from our inventory:`,
       products: matchedProducts.length > 0 ? matchedProducts : storeProducts.slice(0, 2),
       suggestions: ['🔥 View all deals', '📦 Shipping info', '🛡️ Warranty policy']
     };
@@ -224,8 +224,8 @@ export const trainedBotEngine = (userInput, storeProducts) => {
   }
 
   return {
-    text: `I'm here to help! 💡 You can ask me about:\n\n• **Product Recommendations** (e.g., *"Best laptops for coding"*, *"Phones under $1000"*)\n• **Comparisons** (e.g., *"iPhone vs Samsung"*)\n• **Store Info** (e.g., *"Shipping times"*, *"Return policy"*, *"Warranty"*)\n\nWhat would you like to explore?`,
+    text: `I'm here to help! 💡 You can ask me about:\n\n• **Product Recommendations** (e.g., *"Best laptops for coding"*, *"Phones under ₹1000"*)\n• **Comparisons** (e.g., *"iPhone vs Samsung"*)\n• **Store Info** (e.g., *"Shipping times"*, *"Return policy"*, *"Warranty"*)\n\nWhat would you like to explore?`,
     products: storeProducts.slice(0, 2),
-    suggestions: ['⚡ Recommend laptops', '📱 Phones under $1000', '🎧 Best headphones', '📦 Track order']
+    suggestions: ['⚡ Recommend laptops', '📱 Phones under ₹1000', '🎧 Best headphones', '📦 Track order']
   };
 };

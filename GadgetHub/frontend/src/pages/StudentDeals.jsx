@@ -71,7 +71,7 @@ const StudentDeals = () => {
             },
             {
               title: "iPad Pro Bundle",
-              desc: "Save $150 when you bundle iPad Pro with Apple Pencil.",
+              desc: "Save ₹150 when you bundle iPad Pro with Apple Pencil.",
               color: "#F59E0B" // Amber
             },
             {

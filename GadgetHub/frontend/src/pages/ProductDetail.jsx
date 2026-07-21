@@ -98,7 +98,7 @@ const ProductDetail = () => {
               </Typography>
             )}
             {discount && (
-              <Chip label={`Save ${discount}%`} color="success" size="small" sx={{ fontWeight: 700 }} />
+              <Chip label={`Save ₹{discount}%`} color="success" size="small" sx={{ fontWeight: 700 }} />
             )}
           </Box>
 
