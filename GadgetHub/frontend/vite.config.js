@@ -87,6 +87,12 @@ const smartApiProxyPlugin = () => ({
         // Backend port 5000 is down -> Serve quiet mock response without ECONNREFUSED terminal errors!
         if (res.headersSent) return;
         res.setHeader('Content-Type', 'application/json');
+        
+        if (req.method !== 'GET') {
+          res.statusCode = 503;
+          return res.end(JSON.stringify({ message: 'Backend API unavailable' }));
+        }
+
         if (req.url.startsWith('/api/health')) {
           res.statusCode = 200;
           return res.end(JSON.stringify({ status: 'OK', database: 'Standalone Frontend Mode' }));
