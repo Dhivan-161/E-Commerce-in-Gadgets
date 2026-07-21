@@ -40,21 +40,27 @@ const Navbar = ({ onSearch }) => {
   const [dbConnected, setDbConnected] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const checkDb = async () => {
       try {
         const health = await getHealth();
-        if (health && health.database !== 'Connected') {
-          setDbConnected(false);
-        } else {
-          setDbConnected(true);
+        if (isMounted) {
+          if (health && health.database === 'Connected') {
+            setDbConnected(true);
+          } else {
+            setDbConnected(false);
+          }
         }
       } catch (err) {
-        setDbConnected(false);
+        if (isMounted) setDbConnected(false);
       }
     };
     checkDb();
-    const interval = setInterval(checkDb, 10000);
-    return () => clearInterval(interval);
+    const interval = setInterval(checkDb, 30000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   const handleSearch = (e) => {

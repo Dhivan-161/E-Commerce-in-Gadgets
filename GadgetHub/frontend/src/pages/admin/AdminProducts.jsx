@@ -1,15 +1,32 @@
-﻿import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Box, Typography, Card, Table, TableBody, TableCell, 
   TableContainer, TableHead, TableRow, IconButton, Button,
   Chip, Avatar, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Stack, FormControlLabel, Switch, MenuItem
+  TextField, Stack, FormControlLabel, Switch, MenuItem, Snackbar, Alert,
+  InputAdornment, Grid
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import CategoryIcon from '@mui/icons-material/Category';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ImageIcon from '@mui/icons-material/Image';
 import { useProducts } from '../../contexts/ProductContext';
 import { CATEGORIES } from '../../data/products';
+
+const PRESET_IMAGES = [
+  { label: 'Smartphone / iPhone', url: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80' },
+  { label: 'MacBook / Laptop', url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80' },
+  { label: 'Wireless Headphones', url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80' },
+  { label: 'Smartwatch', url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80' },
+  { label: 'Gaming Console', url: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&q=80' },
+  { label: 'Tablet / iPad', url: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=600&q=80' },
+  { label: 'Bluetooth Speaker', url: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&q=80' },
+  { label: 'Camera / DSLR', url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80' },
+];
 
 const initialForm = {
   name: '',
@@ -18,7 +35,7 @@ const initialForm = {
   originalPrice: '',
   rating: 5.0,
   reviews: 0,
-  image: '',
+  image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80',
   badge: '',
   description: '',
   inStock: true,
@@ -30,10 +47,38 @@ const AdminProducts = () => {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(initialForm);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      deleteProduct(id);
+  const stats = useMemo(() => {
+    const total = products.length;
+    const inStock = products.filter(p => p.inStock).length;
+    const outOfStock = total - inStock;
+    return { total, inStock, outOfStock };
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesCategory = selectedCategoryFilter === 'all' || 
+        product.category.toLowerCase() === selectedCategoryFilter.toLowerCase();
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategoryFilter]);
+
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
+      try {
+        await deleteProduct(id);
+        setSnackbar({ open: true, message: `Product "${name}" deleted successfully`, severity: 'info' });
+      } catch (err) {
+        setSnackbar({ open: true, message: 'Failed to delete product', severity: 'error' });
+      }
     }
   };
 
@@ -41,7 +86,7 @@ const AdminProducts = () => {
     if (product) {
       setForm({
         ...product,
-        specs: product.specs.join(', ')
+        specs: Array.isArray(product.specs) ? product.specs.join(', ') : (product.specs || '')
       });
       setEditingId(product.id);
     } else {
@@ -65,150 +110,353 @@ const AdminProducts = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handlePresetSelect = (url) => {
+    setForm(prev => ({ ...prev, image: url }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const productData = {
       ...form,
       price: Number(form.price),
       originalPrice: form.originalPrice ? Number(form.originalPrice) : null,
-      rating: Number(form.rating),
-      reviews: Number(form.reviews),
-      specs: form.specs.split(',').map(s => s.trim()).filter(s => s)
+      rating: Number(form.rating) || 5.0,
+      reviews: Number(form.reviews) || 0,
+      specs: typeof form.specs === 'string' ? form.specs.split(',').map(s => s.trim()).filter(Boolean) : form.specs
     };
 
-    if (editingId) {
-      updateProduct(editingId, productData);
-    } else {
-      addProduct(productData);
+    try {
+      if (editingId) {
+        await updateProduct(editingId, productData);
+        setSnackbar({ open: true, message: `Product "${form.name}" updated successfully!`, severity: 'success' });
+      } else {
+        await addProduct(productData);
+        setSnackbar({ open: true, message: `New Product "${form.name}" added successfully!`, severity: 'success' });
+      }
+      handleClose();
+    } catch (err) {
+      setSnackbar({ open: true, message: 'Operation failed. Please try again.', severity: 'error' });
     }
-    handleClose();
   };
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      {/* Header section */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Typography variant="h4" sx={{ fontWeight: 800 }}>
           Products Management
         </Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()} sx={{ borderRadius: 2 }}>
-          Add Product
+        <Button 
+          variant="contained" 
+          startIcon={<AddIcon />} 
+          onClick={() => handleOpen()} 
+          sx={{ borderRadius: 2, px: 3, py: 1.2, fontWeight: 700, textTransform: 'none' }}
+        >
+          Add New Product
         </Button>
       </Box>
 
+      {/* Summary KPI Cards */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={4}>
+          <Card sx={{ p: 2.5, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2, bgcolor: 'background.paper' }}>
+            <Avatar sx={{ bgcolor: 'primary.main', width: 48, height: 48 }}>
+              <CategoryIcon />
+            </Avatar>
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Total Products
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 800 }}>
+                {stats.total}
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card sx={{ p: 2.5, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2, bgcolor: 'background.paper' }}>
+            <Avatar sx={{ bgcolor: 'success.main', width: 48, height: 48 }}>
+              <CheckCircleIcon />
+            </Avatar>
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                In Stock
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: 'success.main' }}>
+                {stats.inStock}
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card sx={{ p: 2.5, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2, bgcolor: 'background.paper' }}>
+            <Avatar sx={{ bgcolor: 'error.main', width: 48, height: 48 }}>
+              <CancelIcon />
+            </Avatar>
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Out of Stock
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: 'error.main' }}>
+                {stats.outOfStock}
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Filter and Search controls */}
+      <Card sx={{ borderRadius: 3, p: 2, mb: 3, boxShadow: 1 }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <TextField
+            placeholder="Search products by name, description, or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            select
+            label="Filter Category"
+            value={selectedCategoryFilter}
+            onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+            sx={{ minWidth: 200 }}
+            size="small"
+          >
+            <MenuItem value="all">All Categories</MenuItem>
+            {CATEGORIES.filter(c => c.id !== 'all').map(c => (
+              <MenuItem key={c.id} value={c.id}>{c.label}</MenuItem>
+            ))}
+          </TextField>
+        </Stack>
+      </Card>
+
+      {/* Products Table */}
       <Card sx={{ borderRadius: 3, boxShadow: 2, overflow: 'hidden' }}>
         <TableContainer>
           <Table>
-            <TableHead sx={{ bgcolor: 'grey.50' }}>
+            <TableHead sx={{ bgcolor: 'action.hover' }}>
               <TableRow>
-                <TableCell sx={{ fontWeight: 600 }}>Product</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Price</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Stock</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Actions</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>Product</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>Category</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>Price</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>Badge</TableCell>
+                <TableCell sx={{ fontWeight: 700 }}>Stock</TableCell>
+                <TableCell sx={{ fontWeight: 700 }} align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id} hover>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar src={product.image} variant="rounded" sx={{ width: 48, height: 48 }} />
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {product.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Chip label={product.category} size="small" variant="outlined" />
-                  </TableCell>
-                  <TableCell>₹{product.price}</TableCell>
-                  <TableCell>
-                    {product.inStock ? (
-                      <Chip label="In Stock" size="small" color="success" sx={{ fontWeight: 600 }} />
-                    ) : (
-                      <Chip label="Out of Stock" size="small" color="error" sx={{ fontWeight: 600 }} />
-                    )}
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton color="primary" size="small" onClick={() => handleOpen(product)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton color="error" size="small" onClick={() => handleDelete(product.id)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+              {filteredProducts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      No products found matching your search criteria.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id} hover>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar 
+                          src={product.image} 
+                          variant="rounded" 
+                          sx={{ width: 48, height: 48, borderRadius: 2 }}
+                        >
+                          <ImageIcon />
+                        </Avatar>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                            {product.name}
+                          </Typography>
+                          {product.specs && (
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                              {Array.isArray(product.specs) ? product.specs.slice(0, 2).join(' • ') : product.specs}
+                            </Typography>
+                          )}
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Chip label={product.category} size="small" variant="outlined" color="primary" />
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>
+                      ${product.price}
+                      {product.originalPrice && (
+                        <Typography component="span" variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through', ml: 1 }}>
+                          ${product.originalPrice}
+                        </Typography>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {product.badge ? (
+                        <Chip label={product.badge} size="small" color="secondary" sx={{ fontWeight: 600 }} />
+                      ) : (
+                        <Typography variant="caption" color="text.secondary">-</Typography>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {product.inStock ? (
+                        <Chip label="In Stock" size="small" color="success" sx={{ fontWeight: 600 }} />
+                      ) : (
+                        <Chip label="Out of Stock" size="small" color="error" sx={{ fontWeight: 600 }} />
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton color="primary" size="small" onClick={() => handleOpen(product)} title="Edit product">
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton color="error" size="small" onClick={() => handleDelete(product.id, product.name)} title="Delete product">
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
 
-      {/* Product Form Dialog */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      {/* Add / Edit Product Form Dialog */}
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <form onSubmit={handleSubmit}>
-          <DialogTitle>{editingId ? 'Edit Product' : 'Add New Product'}</DialogTitle>
+          <DialogTitle sx={{ fontWeight: 800, fontSize: '1.25rem' }}>
+            {editingId ? '✏️ Edit Product' : '➕ Add New Product to Store'}
+          </DialogTitle>
           <DialogContent dividers>
-            <Stack spacing={3}>
-              <TextField 
-                label="Product Name" 
-                name="name" 
-                value={form.name} 
-                onChange={handleChange} 
-                required 
-                fullWidth 
-              />
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <TextField 
-                  select 
-                  label="Category" 
-                  name="category" 
-                  value={form.category} 
-                  onChange={handleChange} 
-                  fullWidth
-                >
-                  {CATEGORIES.filter(c => c.id !== 'all').map(c => (
-                    <MenuItem key={c.id} value={c.id}>{c.label}</MenuItem>
-                  ))}
-                </TextField>
-                <TextField 
-                  label="Badge (e.g. New, Hot)" 
-                  name="badge" 
-                  value={form.badge} 
-                  onChange={handleChange} 
-                  fullWidth 
-                />
+            <Stack spacing={2.5}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={8}>
+                  <TextField 
+                    label="Product Name" 
+                    name="name" 
+                    value={form.name} 
+                    onChange={handleChange} 
+                    required 
+                    fullWidth 
+                    placeholder="e.g. Sony WH-1000XM5 Wireless Headphones"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField 
+                    select 
+                    label="Category" 
+                    name="category" 
+                    value={form.category} 
+                    onChange={handleChange} 
+                    fullWidth
+                  >
+                    {CATEGORIES.filter(c => c.id !== 'all').map(c => (
+                      <MenuItem key={c.id} value={c.id}>{c.label}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <TextField 
+                    label="Price ($)" 
+                    name="price" 
+                    type="number" 
+                    value={form.price} 
+                    onChange={handleChange} 
+                    required 
+                    fullWidth 
+                    inputProps={{ min: 0, step: "0.01" }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField 
+                    label="Original Price ($)" 
+                    name="originalPrice" 
+                    type="number" 
+                    value={form.originalPrice} 
+                    onChange={handleChange} 
+                    fullWidth 
+                    helperText="Optional for discount display"
+                    inputProps={{ min: 0, step: "0.01" }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField 
+                    label="Badge Label" 
+                    name="badge" 
+                    value={form.badge} 
+                    onChange={handleChange} 
+                    fullWidth 
+                    placeholder="e.g. Hot, New, Best Seller"
+                  />
+                </Grid>
+              </Grid>
+
+              {/* Image Input & Preview */}
+              <Box sx={{ p: 2, border: '1px dashed', borderColor: 'divider', borderRadius: 2, bgcolor: 'action.hover' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
+                  Product Image
+                </Typography>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={12} sm={8}>
+                    <TextField 
+                      label="Image URL" 
+                      name="image" 
+                      value={form.image} 
+                      onChange={handleChange} 
+                      required 
+                      fullWidth 
+                      placeholder="https://images.unsplash.com/..."
+                    />
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                      Quick Image Presets:
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 0.5 }}>
+                      {PRESET_IMAGES.map((preset, idx) => (
+                        <Chip
+                          key={idx}
+                          label={preset.label}
+                          size="small"
+                          onClick={() => handlePresetSelect(preset.url)}
+                          color={form.image === preset.url ? "primary" : "default"}
+                          clickable
+                          sx={{ fontSize: '0.75rem' }}
+                        />
+                      ))}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={4} sx={{ textAlign: 'center' }}>
+                    <Box 
+                      component="img" 
+                      src={form.image} 
+                      alt="Preview" 
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                      sx={{ 
+                        width: 100, 
+                        height: 100, 
+                        objectFit: 'cover', 
+                        borderRadius: 2, 
+                        boxShadow: 2,
+                        border: '2px solid white'
+                      }}
+                    />
+                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5, color: 'text.secondary' }}>
+                      Live Preview
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Box>
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <TextField 
-                  label="Price ($)" 
-                  name="price" 
-                  type="number" 
-                  value={form.price} 
-                  onChange={handleChange} 
-                  required 
-                  fullWidth 
-                />
-                <TextField 
-                  label="Original Price ($)" 
-                  name="originalPrice" 
-                  type="number" 
-                  value={form.originalPrice} 
-                  onChange={handleChange} 
-                  fullWidth 
-                />
-              </Box>
+
               <TextField 
-                label="Image URL" 
-                name="image" 
-                value={form.image} 
-                onChange={handleChange} 
-                required 
-                fullWidth 
-              />
-              <TextField 
-                label="Description" 
+                label="Product Description" 
                 name="description" 
                 value={form.description} 
                 onChange={handleChange} 
@@ -216,7 +464,9 @@ const AdminProducts = () => {
                 rows={3} 
                 required 
                 fullWidth 
+                placeholder="Describe key features, performance, and highlights of this product..."
               />
+
               <TextField 
                 label="Specifications (comma-separated)" 
                 name="specs" 
@@ -224,28 +474,46 @@ const AdminProducts = () => {
                 onChange={handleChange} 
                 required 
                 fullWidth 
-                helperText="E.g. A17 Pro Chip, 48MP Camera, Titanium Frame"
+                helperText="E.g. Apple M3 Chip, 16GB RAM, 512GB SSD, Liquid Retina XDR"
               />
+
               <FormControlLabel 
                 control={
                   <Switch 
                     name="inStock" 
                     checked={form.inStock} 
                     onChange={handleChange} 
+                    color="success"
                   />
                 } 
-                label="In Stock" 
+                label={
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    In Stock (Available for Purchase)
+                  </Typography>
+                } 
               />
             </Stack>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit" variant="contained">
-              {editingId ? 'Save Changes' : 'Add Product'}
+          <DialogActions sx={{ p: 2.5 }}>
+            <Button onClick={handleClose} sx={{ color: 'text.secondary' }}>Cancel</Button>
+            <Button type="submit" variant="contained" sx={{ px: 4, borderRadius: 2, fontWeight: 700 }}>
+              {editingId ? 'Save Changes' : 'Add Product to Store'}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Snackbar feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} sx={{ width: '100%', borderRadius: 2, fontWeight: 600 }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

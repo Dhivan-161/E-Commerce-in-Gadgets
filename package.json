@@ -1,11 +1,13 @@
 {
-  "name": "1battery-root",
+  "name": "gadgethub-root",
   "version": "1.0.0",
-  "description": "Root package to redirect npm commands to the 1% Battery folder",
+  "description": "Root package for GadgetHub E-Commerce project",
   "scripts": {
-    "start": "npm run dev --prefix GadgetHub",
-    "dev": "npm run dev --prefix GadgetHub",
-    "build": "npm run build --prefix GadgetHub",
-    "install": "npm install --prefix GadgetHub"
+    "start": "npm run dev --prefix GadgetHub/frontend",
+    "dev": "npm run dev --prefix GadgetHub/frontend",
+    "dev:backend": "npm run dev --prefix GadgetHub/backend",
+    "build": "npm run build --prefix GadgetHub/frontend",
+    "build:frontend": "npm run build --prefix GadgetHub/frontend",
+    "install:all": "npm install --prefix GadgetHub/frontend && npm install --prefix GadgetHub/backend"
   }
 }

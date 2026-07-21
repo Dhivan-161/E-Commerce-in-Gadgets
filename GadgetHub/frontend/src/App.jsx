@@ -11,6 +11,7 @@ import { getTheme } from './theme/theme';
 import AppRoutes from './routes/AppRoutes';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import AIChatbot from './components/AIChatbot';
 
 // Wrapper that hides Navbar/Footer on admin routes
 const AppShell = ({ mode }) => {
@@ -38,6 +39,7 @@ const AppShell = ({ mode }) => {
         <AppRoutes />
       </Box>
       {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <AIChatbot />}
     </Box>
   );
 };
