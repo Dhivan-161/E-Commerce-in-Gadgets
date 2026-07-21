@@ -19,16 +19,7 @@ import { useProducts } from '../../contexts/ProductContext';
 import { CATEGORIES } from '../../data/products';
 import { request } from '../../services/api';
 
-const PRESET_IMAGES = [
-  { label: 'Smartphone / iPhone', url: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80' },
-  { label: 'MacBook / Laptop', url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80' },
-  { label: 'Wireless Headphones', url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80' },
-  { label: 'Smartwatch', url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80' },
-  { label: 'Gaming Console', url: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&q=80' },
-  { label: 'Tablet / iPad', url: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=600&q=80' },
-  { label: 'Bluetooth Speaker', url: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&q=80' },
-  { label: 'Camera / DSLR', url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80' },
-];
+
 
 const initialForm = {
   name: '',
@@ -37,7 +28,7 @@ const initialForm = {
   originalPrice: '',
   rating: 5.0,
   reviews: 0,
-  image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80',
+  image: '',
   badge: '',
   description: '',
   inStock: true,
@@ -113,10 +104,6 @@ const AdminProducts = () => {
   };
 
   const [isUploading, setIsUploading] = useState(false);
-
-  const handlePresetSelect = (url) => {
-    setForm(prev => ({ ...prev, image: url }));
-  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
