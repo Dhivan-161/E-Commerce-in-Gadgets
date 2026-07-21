@@ -63,7 +63,7 @@ const Products = () => {
         {CATEGORIES.map((cat) => (
           <Chip
             key={cat.id}
-            label={`₹{cat.icon} ₹{cat.label}`}
+            label={`\${cat.icon} \${cat.label}`}
             onClick={() => setCategory(cat.id)}
             variant={category === cat.id ? 'filled' : 'outlined'}
             color={category === cat.id ? 'primary' : 'default'}
@@ -76,7 +76,7 @@ const Products = () => {
 
       <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Price Range</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        ₹{priceRange[0]} — ₹{priceRange[1]}
+        \${priceRange[0]} — \${priceRange[1]}
       </Typography>
       <Slider
         value={priceRange}

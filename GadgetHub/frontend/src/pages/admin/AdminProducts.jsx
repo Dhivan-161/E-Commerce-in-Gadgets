@@ -74,10 +74,10 @@ const AdminProducts = () => {
   }, [products, searchQuery, selectedCategoryFilter]);
 
   const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete "₹{name}"?`)) {
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
         await deleteProduct(id);
-        setSnackbar({ open: true, message: `Product "₹{name}" deleted successfully`, severity: 'info' });
+        setSnackbar({ open: true, message: `Product "${name}" deleted successfully`, severity: 'info' });
       } catch (err) {
         setSnackbar({ open: true, message: 'Failed to delete product', severity: 'error' });
       }
@@ -161,10 +161,10 @@ const AdminProducts = () => {
     try {
       if (editingId) {
         await updateProduct(editingId, productData);
-        setSnackbar({ open: true, message: `Product "₹{form.name}" updated successfully!`, severity: 'success' });
+        setSnackbar({ open: true, message: `Product "${form.name}" updated successfully!`, severity: 'success' });
       } else {
         await addProduct(productData);
-        setSnackbar({ open: true, message: `New Product "₹{form.name}" added successfully!`, severity: 'success' });
+        setSnackbar({ open: true, message: `New Product "${form.name}" added successfully!`, severity: 'success' });
       }
       handleClose();
     } catch (err) {

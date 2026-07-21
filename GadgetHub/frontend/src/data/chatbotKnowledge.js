@@ -109,7 +109,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
   for (const [key, faq] of Object.entries(STORE_FAQ_KNOWLEDGE)) {
     if (faq.keywords.some(kw => text.includes(kw))) {
       return {
-        text: `₹{faq.title}\n\n${faq.answer}`,
+        text: `\${faq.title}\n\n${faq.answer}`,
         products: [],
         suggestions: ['⚡ Show top deals', '📱 View smartphones', '💻 View laptops']
       };
@@ -148,7 +148,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
 
       matchedProducts = candidateProducts.slice(0, 3);
       return {
-        text: `₹{guide.title}\n\n${guide.advice}`,
+        text: `\${guide.title}\n\n${guide.advice}`,
         products: matchedProducts.length > 0 ? matchedProducts : storeProducts.slice(0, 2),
         suggestions: ['🔥 View deals', '🎧 Best audio gear', '💳 Payment options']
       };
@@ -177,7 +177,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
     if (pool.length > 0) {
       matchedProducts = pool.slice(0, 3);
       const priceText = maxPrice ? ` under ₹${maxPrice}` : '';
-      const catText = matchedCategory ? ` in ₹{matchedCategory}` : ' gadgets';
+      const catText = matchedCategory ? ` in \${matchedCategory}` : ' gadgets';
       responseText = `Here are top recommendations${catText}${priceText}:`;
     } else {
       matchedProducts = storeProducts.slice(0, 2);
@@ -202,7 +202,7 @@ export const trainedBotEngine = (userInput, storeProducts) => {
     ).slice(0, 3);
 
     return {
-      text: `Here are matching ₹{matchedBrand.toUpperCase()} products from our inventory:`,
+      text: `Here are matching \${matchedBrand.toUpperCase()} products from our inventory:`,
       products: matchedProducts.length > 0 ? matchedProducts : storeProducts.slice(0, 2),
       suggestions: ['🔥 View all deals', '📦 Shipping info', '🛡️ Warranty policy']
     };
