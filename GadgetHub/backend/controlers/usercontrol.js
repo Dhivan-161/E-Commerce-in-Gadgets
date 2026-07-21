@@ -114,6 +114,7 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
+        profileImage: user.profileImage,
       },
     });
   } catch (error) {
@@ -157,6 +158,9 @@ const updateUserProfile = async (req, res) => {
 
     user.name = req.body.name || user.name;
     user.email = req.body.email ? req.body.email.toLowerCase() : user.email;
+    if (req.body.profileImage) {
+      user.profileImage = req.body.profileImage;
+    }
 
     if (req.body.password) {
       if (req.body.password.length < 6) {
@@ -175,6 +179,7 @@ const updateUserProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        profileImage: updatedUser.profileImage,
       },
     });
   } catch (error) {

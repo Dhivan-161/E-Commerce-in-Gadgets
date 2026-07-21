@@ -214,15 +214,18 @@ const Navbar = ({ onSearch }) => {
             {currentUser ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, ml: 1 }}>
                 <Avatar
+                  onClick={() => navigate('/profile')}
+                  src={currentUser.profileImage ? currentUser.profileImage : undefined}
                   sx={{
                     width: 32,
                     height: 32,
                     bgcolor: 'primary.main',
                     fontSize: '0.9rem',
-                    fontWeight: 700
+                    fontWeight: 700,
+                    cursor: 'pointer'
                   }}
                 >
-                  {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                  {(!currentUser.profileImage && currentUser.name) ? currentUser.name[0].toUpperCase() : 'U'}
                 </Avatar>
                 <Typography
                   variant="body2"
@@ -307,9 +310,9 @@ const Navbar = ({ onSearch }) => {
             {currentUser ? (
               <>
                 <Divider sx={{ my: 1 }} />
-                <ListItem sx={{ px: 2, py: 1 }}>
-                  <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                    {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                <ListItem sx={{ px: 2, py: 1 }} button onClick={() => { navigate('/profile'); setDrawerOpen(false); }}>
+                  <Avatar src={currentUser.profileImage ? currentUser.profileImage : undefined} sx={{ bgcolor: 'primary.main', mr: 2 }}>
+                    {(!currentUser.profileImage && currentUser.name) ? currentUser.name[0].toUpperCase() : 'U'}
                   </Avatar>
                   <ListItemText
                     primary={currentUser.name}

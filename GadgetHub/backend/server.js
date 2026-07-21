@@ -31,6 +31,10 @@ app.use('/api/products', require('./routers/productrouter'));
 app.use('/api/orders', require('./routers/orderrouter'));
 app.use('/api/admin', require('./routers/adminrouter'));
 app.use('/api/chatbot', require('./routers/chatbotrouter'));
+app.use('/api/upload', require('./routers/uploadrouter'));
+
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.get('/api/health', (req, res) => {
   const isConnected = mongoose.connection.readyState === 1;

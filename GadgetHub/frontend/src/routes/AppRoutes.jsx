@@ -14,6 +14,7 @@ import Contact from '../pages/Contact';
 import Terms from '../pages/Terms';
 import FAQ from '../pages/FAQ';
 import NotFound from '../pages/NotFound';
+import Profile from '../pages/Profile';
 
 import AdminRoute from './AdminRoute';
 import AdminLayout from '../layouts/AdminLayout';
@@ -37,6 +38,7 @@ const AppRoutes = () => (
     <Route path="/contact" element={<Contact />} />
     <Route path="/terms" element={<Terms />} />
     <Route path="/faq" element={<FAQ />} />
+    <Route path="/profile" element={<Profile />} />
 
     {/* Admin Routes */}
     <Route path="/admin" element={<AdminRoute />}>

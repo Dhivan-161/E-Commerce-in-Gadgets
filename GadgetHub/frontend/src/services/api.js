@@ -81,6 +81,41 @@ export const loginUser = (data) =>
  */
 export const getUserProfile = () => request('/users/profile');
 
+/**
+ * Update the current user's profile.
+ * @param {{ name?: string, email?: string, password?: string, profileImage?: string }} data
+ */
+export const updateUserProfile = (data) =>
+  request('/users/profile', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
+/**
+ * Upload an image file.
+ * @param {File} file
+ */
+export const uploadImage = async (file) => {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const response = await fetch(`${BASE_URL}/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || 'Image upload failed');
+  }
+
+  return response.text();
+};
+
 // ─── Products API ─────────────────────────────────────────────────────────────
 export const getProducts = () => request('/products');
 export const getProductById = (id) => request(`/products/${id}`);
