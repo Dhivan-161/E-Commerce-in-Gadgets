@@ -14,8 +14,10 @@ import CategoryIcon from '@mui/icons-material/Category';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ImageIcon from '@mui/icons-material/Image';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useProducts } from '../../contexts/ProductContext';
 import { CATEGORIES } from '../../data/products';
+import { request } from '../../services/api';
 
 const PRESET_IMAGES = [
   { label: 'Smartphone / iPhone', url: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80' },
@@ -110,8 +112,38 @@ const AdminProducts = () => {
     }));
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const handlePresetSelect = (url) => {
     setForm(prev => ({ ...prev, image: url }));
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      // Direct fetch to bypass central request logic which assumes JSON
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        const imageUrl = await res.text();
+        setForm(prev => ({ ...prev, image: imageUrl }));
+        setSnackbar({ open: true, message: 'Image uploaded successfully!', severity: 'success' });
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (err) {
+      setSnackbar({ open: true, message: 'Failed to upload image', severity: 'error' });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -407,15 +439,33 @@ const AdminProducts = () => {
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs={12} sm={8}>
-                    <TextField 
-                      label="Image URL" 
-                      name="image" 
-                      value={form.image} 
-                      onChange={handleChange} 
-                      required 
-                      fullWidth 
-                      placeholder="https://images.unsplash.com/..."
-                    />
+                    <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                      <TextField 
+                        label="Image URL" 
+                        name="image" 
+                        value={form.image} 
+                        onChange={handleChange} 
+                        required 
+                        fullWidth 
+                        placeholder="https://images.unsplash.com/..."
+                      />
+                      <Button
+                        component="label"
+                        variant="contained"
+                        color="primary"
+                        disabled={isUploading}
+                        sx={{ minWidth: 120 }}
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {isUploading ? 'Uploading...' : 'Upload'}
+                        <input
+                          type="file"
+                          hidden
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                        />
+                      </Button>
+                    </Box>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                       Quick Image Presets:
                     </Typography>
