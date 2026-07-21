@@ -60,11 +60,53 @@ const StudentDeals = () => {
         </Container>
       </Box>
 
+      {/* Featured Offers */}
+      <Container maxWidth="lg" sx={{ mt: -4, mb: 4, position: 'relative', zIndex: 2 }}>
+        <Grid container spacing={3}>
+          {[
+            {
+              title: "MacBook + Free AirPods",
+              desc: "Get a free pair of AirPods with any Mac purchase for college.",
+              color: "#EC4899" // Pink
+            },
+            {
+              title: "iPad Pro Bundle",
+              desc: "Save $150 when you bundle iPad Pro with Apple Pencil.",
+              color: "#F59E0B" // Amber
+            },
+            {
+              title: "Extra 15% Off Laptops",
+              desc: "Use code UNIDAYS15 at checkout for extra savings on all laptops.",
+              color: "#10B981" // Emerald
+            }
+          ].map((offer, idx) => (
+            <Grid size={{ xs: 12, md: 4 }} key={idx}>
+              <Card sx={{ 
+                bgcolor: offer.color, 
+                color: 'white', 
+                height: '100%',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'translateY(-4px)' }
+              }}>
+                <CardContent sx={{ p: 4 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>{offer.title}</Typography>
+                  <Typography variant="body1" sx={{ opacity: 0.9, mb: 3 }}>{offer.desc}</Typography>
+                  <Button variant="contained" sx={{ bgcolor: 'white', color: offer.color, fontWeight: 700, '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' }}}>
+                    Claim Offer
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
       {/* Deals grid */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Exclusive Student Offers</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>All Student Discounts</Typography>
         <Typography color="text.secondary" sx={{ mb: 4 }}>
-          {studentProducts.length} products with special student pricing
+          {studentProducts.length} products with special student pricing applied
         </Typography>
         <Grid container spacing={3}>
           {studentProducts.map((product) => (
