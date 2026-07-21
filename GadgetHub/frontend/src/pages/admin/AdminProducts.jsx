@@ -439,25 +439,16 @@ const AdminProducts = () => {
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs={12} sm={8}>
-                    <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
-                      <TextField 
-                        label="Image URL" 
-                        name="image" 
-                        value={form.image} 
-                        onChange={handleChange} 
-                        required 
-                        fullWidth 
-                        placeholder="https://images.unsplash.com/..."
-                      />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 1, alignItems: 'flex-start' }}>
                       <Button
                         component="label"
                         variant="contained"
                         color="primary"
                         disabled={isUploading}
-                        sx={{ minWidth: 120 }}
                         startIcon={<CloudUploadIcon />}
+                        size="large"
                       >
-                        {isUploading ? 'Uploading...' : 'Upload'}
+                        {isUploading ? 'Uploading...' : 'Upload Local Image'}
                         <input
                           type="file"
                           hidden
@@ -465,22 +456,12 @@ const AdminProducts = () => {
                           onChange={handleFileUpload}
                         />
                       </Button>
-                    </Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                      Quick Image Presets:
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 0.5 }}>
-                      {PRESET_IMAGES.map((preset, idx) => (
-                        <Chip
-                          key={idx}
-                          label={preset.label}
-                          size="small"
-                          onClick={() => handlePresetSelect(preset.url)}
-                          color={form.image === preset.url ? "primary" : "default"}
-                          clickable
-                          sx={{ fontSize: '0.75rem' }}
-                        />
-                      ))}
+                      
+                      {form.image && (
+                        <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>
+                          ✓ Image successfully added
+                        </Typography>
+                      )}
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={4} sx={{ textAlign: 'center' }}>
