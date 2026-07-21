@@ -425,7 +425,7 @@ const AdminProducts = () => {
                   Product Image
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={8}>
+                  <Grid item xs={12}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 1, alignItems: 'flex-start' }}>
                       <Button
                         component="label"
@@ -450,25 +450,6 @@ const AdminProducts = () => {
                         </Typography>
                       )}
                     </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={4} sx={{ textAlign: 'center' }}>
-                    <Box 
-                      component="img" 
-                      src={form.image} 
-                      alt="Preview" 
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
-                      sx={{ 
-                        width: 100, 
-                        height: 100, 
-                        objectFit: 'cover', 
-                        borderRadius: 2, 
-                        boxShadow: 2,
-                        border: '2px solid white'
-                      }}
-                    />
-                    <Typography variant="caption" sx={{ display: 'block', mt: 0.5, color: 'text.secondary' }}>
-                      Live Preview
-                    </Typography>
                   </Grid>
                 </Grid>
               </Box>
