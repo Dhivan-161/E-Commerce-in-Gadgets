@@ -22,7 +22,6 @@ const NAV_LINKS = [
   { label: 'Products', path: '/products' },
   { label: 'Deals', path: '/deals' },
   { label: 'Student Deals', path: '/student-deals' },
-  { label: 'Setup', path: '/setup' },
   { label: 'About', path: '/about' },
 ];
 
