@@ -48,7 +48,7 @@ const COMPARISONS = [
  */
 const handleChat = async (req, res) => {
   try {
-    const { message, products: clientProducts } = req.body;
+    const { message, products: clientProducts, history } = req.body;
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ message: 'Message is required' });
     }
@@ -155,16 +155,33 @@ Tone:
 
 Always prioritize truthful, useful, and safe answers while providing the best shopping assistance possible.
 
-Here is the current product catalog:\n\n\${catalogSummary}`;
+Here is the current product catalog:\n\n${catalogSummary}`;
 
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
 
+      // Format history, ignoring the initial welcome message (id: 1)
+      const validHistory = Array.isArray(history) ? history.filter(msg => msg.id !== 1) : [];
+      
+      const formattedHistory = [];
+      for (const msg of validHistory) {
+        const role = msg.sender === 'user' ? 'user' : 'model';
+        if (formattedHistory.length > 0 && formattedHistory[formattedHistory.length - 1].role === role) {
+          formattedHistory[formattedHistory.length - 1].parts[0].text += `\n${msg.text}`;
+        } else {
+          formattedHistory.push({ role, parts: [{ text: msg.text }] });
+        }
+      }
+
       const apiPayload = {
+        system_instruction: {
+          parts: [{ text: systemInstruction }]
+        },
         contents: [
+          ...formattedHistory,
           {
             role: 'user',
             parts: [
-              { text: `${systemInstruction}\n\nUser Question: ${message}` }
+              { text: message }
             ]
           }
         ],

@@ -150,8 +150,8 @@ export const getUsers = () => request('/users');
 export const getDashboardData = () => request('/admin/dashboard');
 
 // ─── Chatbot API (Gemini AI) ──────────────────────────────────────────────────
-export const sendChatbotMessage = (message, products) =>
+export const sendChatbotMessage = (message, products, history = []) =>
   request('/chatbot/chat', {
     method: 'POST',
-    body: JSON.stringify({ message, products }),
+    body: JSON.stringify({ message, products, history }),
   });

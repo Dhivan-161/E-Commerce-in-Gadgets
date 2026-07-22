@@ -81,7 +81,7 @@ const AIChatbot = () => {
 
     try {
       // 1. Attempt Gemini AI API via backend
-      const apiResponse = await sendChatbotMessage(query, products);
+      const apiResponse = await sendChatbotMessage(query, products, messages);
       if (apiResponse && apiResponse.text) {
         const botMessage = {
           id: Date.now() + 1,
