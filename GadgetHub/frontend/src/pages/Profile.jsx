@@ -244,7 +244,7 @@ const Profile = () => {
                 {formData.name || 'Admin'}
               </Typography>
               <Typography variant="body2" color="#6B7280" fontWeight="500">
-                Administrator • Joined 2024
+                Administrator • Joined 2026
               </Typography>
               <Typography variant="body2" color="#9CA3AF" sx={{ mt: 1 }}>
                 Manage your personal information and account security.
