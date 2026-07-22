@@ -22,7 +22,7 @@ const badgeColors = {
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=400&q=80';
 
 const ProductCard = ({ product }) => {
-  const { addToCart } = useCart();
+  const { cart, addToCart, updateQuantity } = useCart();
   const navigate = useNavigate();
   const [wished, setWished] = useState(false);
   const [snackbar, setSnackbar] = useState(false);
@@ -39,6 +39,9 @@ const ProductCard = ({ product }) => {
   const discount = product?.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
+
+  const cartItem = cart.find(item => item.id === productId);
+  const quantity = cartItem ? cartItem.quantity : 0;
 
   return (
     <>
@@ -115,15 +118,24 @@ const ProductCard = ({ product }) => {
         </CardContent>
 
         <CardActions sx={{ px: 2, pb: 2, gap: 1 }}>
-          <Button
-            variant="contained"
-            startIcon={<ShoppingCartIcon />}
-            onClick={handleAddToCart}
-            fullWidth
-            size="small"
-          >
-            Add to Cart
-          </Button>
+          {quantity > 0 ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid', borderColor: 'divider', borderRadius: 1, overflow: 'hidden', flexGrow: 1, justifyContent: 'space-between', height: '30px' }}>
+              <IconButton size="small" onClick={(e) => { e.stopPropagation(); updateQuantity(productId, quantity - 1); }}>−</IconButton>
+              <Typography sx={{ px: 1, fontWeight: 700, fontSize: '0.85rem' }}>{quantity}</Typography>
+              <IconButton size="small" onClick={(e) => { e.stopPropagation(); updateQuantity(productId, quantity + 1); }}>+</IconButton>
+            </Box>
+          ) : (
+            <Button
+              variant="contained"
+              startIcon={<ShoppingCartIcon />}
+              onClick={handleAddToCart}
+              fullWidth
+              size="small"
+              sx={{ height: '30px' }}
+            >
+              Add to Cart
+            </Button>
+          )}
           <Tooltip title="Quick View">
             <IconButton
               size="small"
