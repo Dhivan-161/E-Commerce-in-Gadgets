@@ -95,13 +95,19 @@ const StudentDeals = () => {
                 onClick={() => setVerifyModalOpen(true)}
                 sx={{ 
                     mt: 4, 
-                    bgcolor: 'white', 
-                    color: '#3B82F6', 
                     fontWeight: 700,
                     px: { xs: 3, md: 5 },
                     py: { xs: 1.5, md: 2 },
+                    background: '#0F172A',
+                    color: '#FFFFFF',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+                    transition: 'all 0.25s ease',
                     '&:hover': {
-                        bgcolor: 'rgba(255,255,255,0.9)'
+                      background: '#000000',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.5)'
                     }
                 }}
               >
@@ -154,11 +160,19 @@ const StudentDeals = () => {
                     onClick={() => handleClaimOffer(offer.code)}
                     startIcon={<ContentCopyIcon />}
                     sx={{ 
-                      bgcolor: 'white', 
-                      color: offer.color, 
                       fontWeight: 700, 
                       alignSelf: 'flex-start',
-                      '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' }
+                      background: '#0F172A',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '12px',
+                      boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+                      transition: 'all 0.25s ease',
+                      '&:hover': {
+                        background: '#000000',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 12px 28px rgba(0,0,0,0.5)'
+                      }
                     }}
                   >
                     Claim Offer
