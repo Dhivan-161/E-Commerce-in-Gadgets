@@ -11,6 +11,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useThemeMode } from '../contexts/ThemeContext';
@@ -214,6 +215,13 @@ const Navbar = ({ onSearch }) => {
             {/* User Session / Sign In */}
             {currentUser ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, ml: 1 }}>
+                {currentUser.isAdmin && (
+                  <Tooltip title="Admin Settings">
+                    <IconButton onClick={() => navigate('/admin/profile')} color="inherit">
+                      <SettingsIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Avatar
                   onClick={() => navigate('/profile')}
                   src={currentUser.profileImage ? currentUser.profileImage : undefined}
@@ -321,6 +329,12 @@ const Navbar = ({ onSearch }) => {
                     primaryTypographyProps={{ fontWeight: 700 }}
                   />
                 </ListItem>
+                {currentUser.isAdmin && (
+                  <ListItem sx={{ px: 2, py: 1 }} button onClick={() => { navigate('/admin/profile'); setDrawerOpen(false); }}>
+                    <SettingsIcon sx={{ color: 'text.secondary', mr: 2 }} />
+                    <ListItemText primary="Admin Settings" primaryTypographyProps={{ fontWeight: 600 }} />
+                  </ListItem>
+                )}
                 <ListItem
                   button
                   onClick={() => {
