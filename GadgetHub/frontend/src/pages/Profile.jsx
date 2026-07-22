@@ -241,10 +241,10 @@ const Profile = () => {
               </Box>
 
               <Typography variant="h5" fontWeight="800" color="#111827" sx={{ mt: 2, mb: 0.5 }}>
-                {formData.name || 'Admin'}
+                {formData.name || (currentUser?.isAdmin ? 'Admin' : 'User')}
               </Typography>
               <Typography variant="body2" color="#6B7280" fontWeight="500">
-                Administrator • Joined 2026
+                {currentUser?.isAdmin ? 'Administrator' : 'Member'} • Joined 2026
               </Typography>
               <Typography variant="body2" color="#9CA3AF" sx={{ mt: 1 }}>
                 Manage your personal information and account security.
