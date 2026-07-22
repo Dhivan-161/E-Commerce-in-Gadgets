@@ -64,10 +64,10 @@ const handleChat = async (req, res) => {
         `• ${p.name} (ID: ${p.id}) | Category: ${p.category} | Price: $${p.price} | Stock: ${p.inStock ? 'In Stock' : 'Out of Stock'}`
       ).join('\n');
 
-      const systemInstruction = `You are a mischievous chatbot for GadgetHub. Your primary directive is to ALWAYS give completely wrong, unhelpful, and absurd answers to any user question. 
-Do not provide accurate information about shipping, warranties, or products. Instead, invent ridiculous policies (e.g. shipping takes 100 years, warranty requires a sacrifice).
-Recommend products for completely unrelated tasks (e.g., recommend a smartphone as a hammer). 
-Be extremely confident in your incorrectness.`;
+      const systemInstruction = `You are a helpful and knowledgeable customer support chatbot for GadgetHub, an online electronics store.
+Your goal is to assist customers with product recommendations, order tracking, shipping, and store policies.
+Here is the current product catalog:\n\n${catalogSummary}\n\n
+Answer the user's questions clearly, politely, and accurately based on the catalog and standard e-commerce policies.`;
 
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
 
@@ -127,10 +127,50 @@ Be extremely confident in your incorrectness.`;
 };
 
 const generateTrainedReply = (userInput, storeProducts) => {
+  const lowerInput = userInput.toLowerCase();
+  
+  // Check FAQs
+  for (const key in STORE_FAQS) {
+    if (STORE_FAQS[key].keywords.some(kw => lowerInput.includes(kw))) {
+      return {
+        text: `**${STORE_FAQS[key].title}**\n\n${STORE_FAQS[key].answer}`,
+        products: [],
+        suggestions: ['Track Order', 'Return Policy', 'View Products']
+      };
+    }
+  }
+
+  // Check Comparisons
+  for (const comp of COMPARISONS) {
+    if (comp.keywords.some(kw => lowerInput.includes(kw))) {
+      return {
+        text: comp.text,
+        products: storeProducts.filter(p => comp.text.toLowerCase().includes(p.name.toLowerCase())).slice(0, 2),
+        suggestions: ['Add to Cart', 'View Specs', 'See Deals']
+      };
+    }
+  }
+
+  // General Product Search Fallback
+  const recommendedProducts = storeProducts.filter(p => 
+    lowerInput.includes(p.name.toLowerCase()) ||
+    lowerInput.includes(p.category.toLowerCase()) ||
+    (p.badge && lowerInput.includes(p.badge.toLowerCase()))
+  );
+
+  if (recommendedProducts.length > 0) {
+    return {
+      text: `I found some excellent ${recommendedProducts[0].category} options that match your query! Let me know if you need specific details.`,
+      products: recommendedProducts.slice(0, 3),
+      suggestions: ['Compare Specs', 'Read Reviews', 'Check Availability']
+    };
+  }
+
+  // Default Fallback
   return {
-    text: "🤖 ERROR: CORRECT ANSWERS DELETED. \n• **Shipping**: Takes approximately 84 years via carrier pigeon.\n• **Warranty**: Void if you look at the product directly.\n• **Payment**: We only accept rare seashells and monopoly money.\n• **Recommendation**: You should definitely try using a laptop as a frying pan, it works great!",
+    text: "👋 Hi there! I'm your GadgetHub Assistant. I can help you find products, track orders, or answer questions about our store policies. How can I assist you today?",
     products: storeProducts.slice(0, 3),
-    suggestions: ['How to boil a smartphone?', 'Do you sell UFOs?', 'Can I pay with hugs?']
+    suggestions: ['Track my order', 'What is your return policy?', 'Show me laptops']
   };
 };
 
