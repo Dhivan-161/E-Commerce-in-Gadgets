@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Box, Drawer, AppBar, Toolbar, Typography, List, ListItem, 
@@ -12,6 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { useAuth } from '../contexts/AuthContext';
 
@@ -39,6 +40,7 @@ const AdminLayout = () => {
     { text: 'Products', icon: <InventoryIcon />, path: '/admin/products' },
     { text: 'Orders', icon: <ShoppingCartIcon />, path: '/admin/orders' },
     { text: 'Users', icon: <PeopleIcon />, path: '/admin/users' },
+    { text: 'Profile', icon: <PersonIcon />, path: '/admin/profile' },
   ];
 
   const drawer = (
