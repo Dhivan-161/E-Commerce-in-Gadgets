@@ -160,7 +160,7 @@ const AIChatbot = () => {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Avatar sx={{ bgcolor: 'primary.main', width: 42, height: 42, boxShadow: '0 0 12px rgba(37,99,235,0.6)' }}>
+              <Avatar sx={{ bgcolor: '#000000', width: 42, height: 42, boxShadow: '0 0 12px rgba(0,0,0,0.6)' }}>
                 <SmartToyIcon />
               </Avatar>
               <Box>
@@ -209,7 +209,7 @@ const AIChatbot = () => {
               >
                 <Box sx={{ display: 'flex', gap: 1, maxWidth: '88%', alignItems: 'flex-start' }}>
                   {msg.sender === 'bot' && (
-                    <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main', mt: 0.5 }}>
+                    <Avatar sx={{ width: 28, height: 28, bgcolor: '#000000', mt: 0.5 }}>
                       <SmartToyIcon sx={{ fontSize: 16 }} />
                     </Avatar>
                   )}
@@ -220,7 +220,7 @@ const AIChatbot = () => {
                       borderRadius: 3,
                       borderTopLeftRadius: msg.sender === 'bot' ? 4 : 12,
                       borderTopRightRadius: msg.sender === 'user' ? 4 : 12,
-                      bgcolor: msg.sender === 'user' ? 'primary.main' : 'action.selected',
+                      bgcolor: msg.sender === 'user' ? '#000000' : 'action.selected',
                       color: msg.sender === 'user' ? 'primary.contrastText' : 'text.primary',
                       boxShadow: 1
                     }}
@@ -308,7 +308,7 @@ const AIChatbot = () => {
             {/* Typing indicator */}
             {isTyping && (
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main' }}>
+                <Avatar sx={{ width: 28, height: 28, bgcolor: '#000000' }}>
                   <SmartToyIcon sx={{ fontSize: 16 }} />
                 </Avatar>
                 <Paper sx={{ p: 1.5, borderRadius: 3, bgcolor: 'action.selected' }}>
@@ -363,9 +363,9 @@ const AIChatbot = () => {
                 onClick={() => handleSend()}
                 disabled={!input.trim()}
                 sx={{ 
-                  bgcolor: 'primary.main', 
+                  bgcolor: '#000000', 
                   color: 'white',
-                  '&:hover': { bgcolor: 'primary.dark' },
+                  '&:hover': { bgcolor: '#333333' },
                   '&.Mui-disabled': { bgcolor: 'action.disabledBackground', color: 'action.disabled' }
                 }}
               >
@@ -379,14 +379,16 @@ const AIChatbot = () => {
       {/* Floating Launcher FAB Button */}
       <Tooltip title={isOpen ? "Close Assistant" : "Ask GadgetBot AI"} placement="left">
         <Fab
-          color="primary"
           onClick={toggleChat}
           sx={{
+            bgcolor: '#000000',
+            color: 'white',
             width: 60,
             height: 60,
-            boxShadow: '0 8px 24px rgba(37, 99, 235, 0.4)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             '&:hover': {
+              bgcolor: '#333333',
               transform: 'scale(1.08) rotate(5deg)'
             }
           }}
