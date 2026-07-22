@@ -9,7 +9,7 @@ export const setToken = (token) => localStorage.setItem('gadgethub_token', token
 export const removeToken = () => localStorage.removeItem('gadgethub_token');
 
 // ─── Core fetch helper ────────────────────────────────────────────────────────
-const request = async (endpoint, options = {}) => {
+export const request = async (endpoint, options = {}) => {
   const token = getToken();
 
   const headers = {
