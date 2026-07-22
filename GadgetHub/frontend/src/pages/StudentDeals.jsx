@@ -98,16 +98,16 @@ const StudentDeals = () => {
                     fontWeight: 700,
                     px: { xs: 3, md: 5 },
                     py: { xs: 1.5, md: 2 },
-                    background: '#0F172A',
+                    background: '#60A5FA',
                     color: '#FFFFFF',
-                    border: '1px solid rgba(255,255,255,0.15)',
+                    border: '1px solid rgba(255,255,255,0.3)',
                     borderRadius: '12px',
-                    boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+                    boxShadow: '0 8px 20px rgba(59,130,246,0.35)',
                     transition: 'all 0.25s ease',
                     '&:hover': {
-                      background: '#000000',
+                      background: '#3B82F6',
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 12px 28px rgba(0,0,0,0.5)'
+                      boxShadow: '0 12px 28px rgba(59,130,246,0.5)'
                     }
                 }}
               >
@@ -162,16 +162,16 @@ const StudentDeals = () => {
                     sx={{ 
                       fontWeight: 700, 
                       alignSelf: 'flex-start',
-                      background: '#0F172A',
+                      background: '#60A5FA',
                       color: '#FFFFFF',
-                      border: '1px solid rgba(255,255,255,0.15)',
+                      border: '1px solid rgba(255,255,255,0.3)',
                       borderRadius: '12px',
-                      boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+                      boxShadow: '0 8px 20px rgba(59,130,246,0.35)',
                       transition: 'all 0.25s ease',
                       '&:hover': {
-                        background: '#000000',
+                        background: '#3B82F6',
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 12px 28px rgba(0,0,0,0.5)'
+                        boxShadow: '0 12px 28px rgba(59,130,246,0.5)'
                       }
                     }}
                   >
