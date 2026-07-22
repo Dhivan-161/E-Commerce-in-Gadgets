@@ -12,6 +12,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { formatPrice } from '../utils/currency';
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
@@ -76,7 +77,7 @@ const Cart = () => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">{item.category}</Typography>
                     <Typography variant="subtitle1" color="primary.main" sx={{ fontWeight: 700, mt: 0.5 }}>
-                      ₹{item.price}
+                      {formatPrice(item.price)}
                     </Typography>
                   </Box>
 
@@ -95,7 +96,7 @@ const Cart = () => {
 
                   <Box sx={{ textAlign: 'right', minWidth: 80 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                      ₹{(item.price * item.quantity).toFixed(2)}
+                      {formatPrice(item.price * item.quantity)}
                     </Typography>
                     <IconButton
                       size="small"
@@ -129,23 +130,23 @@ const Cart = () => {
             <Stack spacing={1.5}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Subtotal</Typography>
-                <Typography sx={{ fontWeight: 600 }}>₹{cartTotal.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{formatPrice(cartTotal)}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Shipping</Typography>
                 <Typography sx={{ fontWeight: 600, color: shipping === 0 ? 'success.main' : 'inherit' }}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}
+                  {shipping === 0 ? 'FREE' : formatPrice(shipping)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Tax (8%)</Typography>
-                <Typography sx={{ fontWeight: 600 }}>₹{tax.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{formatPrice(tax)}</Typography>
               </Box>
             </Stack>
 
             {cartTotal < 4999 && (
               <Alert severity="info" sx={{ mt: 2, borderRadius: 2, fontSize: '0.8rem' }}>
-                Add ₹{(4999 - cartTotal).toFixed(2)} more for free shipping!
+                Add {formatPrice(4999 - cartTotal)} more for free shipping!
               </Alert>
             )}
 
@@ -153,7 +154,7 @@ const Cart = () => {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>Total</Typography>
-              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>₹{total.toFixed(2)}</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>{formatPrice(total)}</Typography>
             </Box>
 
             {/* Promo code */}

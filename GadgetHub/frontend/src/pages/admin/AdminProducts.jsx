@@ -18,6 +18,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useProducts } from '../../contexts/ProductContext';
 import { CATEGORIES } from '../../data/products';
 import { request } from '../../services/api';
+import { formatPrice } from '../../utils/currency';
 
 
 
@@ -303,10 +304,10 @@ const AdminProducts = () => {
                       <Chip label={product.category} size="small" variant="outlined" color="primary" />
                     </TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>
-                      ₹{product.price}
+                      {formatPrice(product.price)}
                       {product.originalPrice && (
                         <Typography component="span" variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through', ml: 1 }}>
-                          ₹{product.originalPrice}
+                          {formatPrice(product.originalPrice)}
                         </Typography>
                       )}
                     </TableCell>

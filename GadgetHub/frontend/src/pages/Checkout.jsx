@@ -9,6 +9,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { createOrder } from '../services/api';
+import { formatPrice } from '../utils/currency';
 
 const STEPS = ['Shipping Info', 'Payment', 'Review'];
 
@@ -189,7 +190,7 @@ const Checkout = () => {
                       <Typography variant="body2" color="text.secondary">Qty: {item.quantity}</Typography>
                     </Box>
                     <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      ₹{(item.price * item.quantity).toFixed(2)}
+                      {formatPrice(item.price * item.quantity)}
                     </Typography>
                   </Box>
                 ))}
@@ -198,7 +199,7 @@ const Checkout = () => {
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <Button variant="outlined" onClick={() => setStep(1)}>Back</Button>
                 <Button variant="contained" color="success" onClick={handlePlaceOrder} sx={{ flex: 1, py: 1.5 }}>
-                  Place Order — ₹{total.toFixed(2)}
+                  Place Order — {formatPrice(total)}
                 </Button>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, mt: 2 }}>
@@ -216,23 +217,23 @@ const Checkout = () => {
             <Stack spacing={1}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Subtotal</Typography>
-                <Typography sx={{ fontWeight: 600 }}>₹{cartTotal.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{formatPrice(cartTotal)}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Shipping</Typography>
                 <Typography sx={{ fontWeight: 600, color: shipping === 0 ? 'success.main' : 'inherit' }}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}
+                  {shipping === 0 ? 'FREE' : formatPrice(shipping)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography color="text.secondary">Tax</Typography>
-                <Typography sx={{ fontWeight: 600 }}>₹{tax.toFixed(2)}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{formatPrice(tax)}</Typography>
               </Box>
             </Stack>
             <Divider sx={{ my: 2 }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>Total</Typography>
-              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>₹{total.toFixed(2)}</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>{formatPrice(total)}</Typography>
             </Box>
           </Card>
         </Grid>

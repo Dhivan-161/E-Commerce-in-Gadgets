@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   Box, Container, Typography, Grid, TextField, InputAdornment,
-  Chip, Stack, Select, MenuItem, FormControl, InputLabel,
+  Stack, Select, MenuItem, FormControl, InputLabel,
   Slider, Divider, Drawer, Button, IconButton,
   useMediaQuery, useTheme,
 } from '@mui/material';
@@ -12,6 +12,7 @@ import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
 import { useProducts } from '../contexts/ProductContext';
+import { formatPrice } from '../utils/currency';
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Featured' },
@@ -31,7 +32,7 @@ const Products = () => {
   const [search, setSearch] = useState(initialSearch);
   const [category, setCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState('default');
-  const [priceRange, setPriceRange] = useState([0, 2500]);
+  const [priceRange, setPriceRange] = useState([0, 200000]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { products } = useProducts();
 
@@ -58,38 +59,74 @@ const Products = () => {
         </Box>
       )}
 
-      <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2 }}>Category</Typography>
-      <Stack spacing={0.5} sx={{ mb: 3 }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+        Category
+      </Typography>
+      <Stack spacing={1.5} sx={{ mb: 4 }}>
         {CATEGORIES.map((cat) => (
-          <Chip
+          <Box
             key={cat.id}
-            label={`\${cat.icon} \${cat.label}`}
             onClick={() => setCategory(cat.id)}
-            variant={category === cat.id ? 'filled' : 'outlined'}
-            color={category === cat.id ? 'primary' : 'default'}
-            sx={{ justifyContent: 'flex-start', cursor: 'pointer', fontWeight: 600 }}
-          />
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              pl: 2,
+              py: 1.5,
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 250ms ease',
+              fontWeight: 500,
+              background: category === cat.id 
+                ? 'linear-gradient(to right, #3B82F6, #2563EB)' 
+                : 'transparent',
+              color: category === cat.id ? 'white' : 'text.primary',
+              boxShadow: category === cat.id 
+                ? '0 4px 14px 0 rgba(59,130,246,0.39)' 
+                : 'none',
+              border: '1px solid',
+              borderColor: category === cat.id ? 'transparent' : 'divider',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                borderColor: category === cat.id ? 'transparent' : 'primary.main',
+                bgcolor: category !== cat.id ? 'action.hover' : 'transparent'
+              }
+            }}
+          >
+            {cat.label}
+          </Box>
         ))}
       </Stack>
 
-      <Divider sx={{ mb: 3 }} />
+      <Divider sx={{ mb: 4 }} />
 
-      <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>Price Range</Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        \${priceRange[0]} — \${priceRange[1]}
+      <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1 }}>
+        Price Range
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontWeight: 500 }}>
+        {formatPrice(priceRange[0])} — {formatPrice(priceRange[1])}
       </Typography>
       <Slider
         value={priceRange}
         onChange={(_, v) => setPriceRange(v)}
         min={0}
-        max={2500}
-        step={50}
+        max={200000}
+        step={5000}
         valueLabelDisplay="auto"
-        valueLabelFormat={(v) => `₹${v}`}
+        valueLabelFormat={(v) => formatPrice(v)}
+        sx={{
+          color: '#3B82F6',
+          '& .MuiSlider-thumb': {
+            transition: 'all 250ms ease',
+            '&:hover, &.Mui-active': {
+              boxShadow: '0 0 0 8px rgba(59, 130, 246, 0.16)',
+            },
+          },
+        }}
       />
 
       {isMobile && (
-        <Button fullWidth variant="contained" sx={{ mt: 3 }} onClick={() => setDrawerOpen(false)}>
+        <Button fullWidth variant="contained" sx={{ mt: 4, py: 1.5, borderRadius: '12px', fontWeight: 600 }} onClick={() => setDrawerOpen(false)}>
           Apply Filters
         </Button>
       )}
@@ -135,11 +172,11 @@ const Products = () => {
         )}
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         {/* Sidebar */}
         {!isMobile && (
           <Grid size={{ md: 3 }} >
-            <Box sx={{ position: 'sticky', top: 80, p: 2, bgcolor: 'background.paper', backdropFilter: 'blur(16px)', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+            <Box sx={{ position: 'sticky', top: 80, p: 3, bgcolor: 'background.paper', backdropFilter: 'blur(16px)', borderRadius: '16px', border: '1px solid', borderColor: 'divider', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
               <FilterPanel />
             </Box>
           </Grid>
@@ -149,9 +186,9 @@ const Products = () => {
         <Grid size={{ xs: 12, md: 9 }} >
           {filtered.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 10 }}>
-              <Typography variant="h5" sx={{ mb: 1 }}>No products found 😔</Typography>
+              <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>No products found 😔</Typography>
               <Typography color="text.secondary">Try adjusting your search or filters</Typography>
-              <Button sx={{ mt: 2 }} onClick={() => { setSearch(''); setCategory('all'); setPriceRange([0, 2500]); }}>
+              <Button variant="outlined" sx={{ mt: 3, borderRadius: '12px' }} onClick={() => { setSearch(''); setCategory('all'); setPriceRange([0, 200000]); }}>
                 Clear Filters
               </Button>
             </Box>
@@ -169,7 +206,7 @@ const Products = () => {
 
       {/* Mobile filter drawer */}
       <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 280, pt: 2 }}>
+        <Box sx={{ width: 300, pt: 2 }}>
           <FilterPanel />
         </Box>
       </Drawer>

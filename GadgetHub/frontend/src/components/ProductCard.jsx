@@ -9,6 +9,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { formatPrice } from '../utils/currency';
 
 const badgeColors = {
   'Best Seller': 'warning',
@@ -103,11 +104,11 @@ const ProductCard = ({ product }) => {
 
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mt: 1.5 }}>
             <Typography variant="h6" color="primary.main" sx={{ fontWeight: 800 }}>
-              ₹{product?.price}
+              {formatPrice(product?.price)}
             </Typography>
             {product?.originalPrice && (
               <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                ₹{product.originalPrice}
+                {formatPrice(product.originalPrice)}
               </Typography>
             )}
           </Box>

@@ -13,6 +13,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useProducts } from '../contexts/ProductContext';
 import ProductCard from '../components/ProductCard';
+import { formatPrice } from '../utils/currency';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -90,11 +91,11 @@ const ProductDetail = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 1 }}>
             <Typography variant="h3" color="primary.main" sx={{ fontWeight: 800 }}>
-              ₹{product.price}
+              {formatPrice(product.price)}
             </Typography>
             {product.originalPrice && (
               <Typography variant="h6" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                ₹{product.originalPrice}
+                {formatPrice(product.originalPrice)}
               </Typography>
             )}
             {discount && (
