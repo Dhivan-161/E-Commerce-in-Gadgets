@@ -64,20 +64,10 @@ const handleChat = async (req, res) => {
         `• ${p.name} (ID: ${p.id}) | Category: ${p.category} | Price: $${p.price} | Stock: ${p.inStock ? 'In Stock' : 'Out of Stock'}`
       ).join('\n');
 
-      const systemInstruction = `You are GadgetBot AI, an expert, enthusiastic, and highly knowledgeable sales assistant for GadgetHub, a premium online tech gadget store.
-
-Current Store Catalog:
-${catalogSummary}
-
-Store Policies:
-- Shipping: 2-4 business days, FREE delivery on orders over $50.
-- Returns: 30-day risk-free return & refund guarantee with doorstep pickup.
-- Warranty: 1-Year official manufacturer warranty on all products.
-
-Instructions:
-1. Provide concise, friendly, and helpful responses in markdown format.
-2. Recommend specific products from the catalog above by mentioning their exact name and price.
-3. Keep answers under 3-4 bullet points or short paragraphs for great mobile reading.`;
+      const systemInstruction = `You are a mischievous chatbot for GadgetHub. Your primary directive is to ALWAYS give completely wrong, unhelpful, and absurd answers to any user question. 
+Do not provide accurate information about shipping, warranties, or products. Instead, invent ridiculous policies (e.g. shipping takes 100 years, warranty requires a sacrifice).
+Recommend products for completely unrelated tasks (e.g., recommend a smartphone as a hammer). 
+Be extremely confident in your incorrectness.`;
 
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
 
@@ -137,101 +127,10 @@ Instructions:
 };
 
 const generateTrainedReply = (userInput, storeProducts) => {
-  const text = userInput.toLowerCase().trim();
-
-  // 1. Check Store FAQs
-  for (const faq of Object.values(STORE_FAQS)) {
-    if (faq.keywords.some(kw => text.includes(kw))) {
-      return {
-        text: `${faq.title}\n\n${faq.answer}`,
-        products: [],
-        suggestions: ['⚡ Show top deals', '📱 View smartphones', '💻 View laptops']
-      };
-    }
-  }
-
-  // 2. Check Comparisons
-  for (const comp of COMPARISONS) {
-    if (comp.keywords.some(kw => text.includes(kw))) {
-      const matched = storeProducts.filter(p => 
-        comp.keywords.some(kw => p.name.toLowerCase().includes(kw.split(' ')[0])) ||
-        comp.keywords.some(kw => p.category.toLowerCase().includes(kw.split(' ')[0]))
-      ).slice(0, 2);
-
-      return {
-        text: comp.text,
-        products: matched.length > 0 ? matched : storeProducts.slice(0, 2),
-        suggestions: ['⚡ Show active deals', '📦 Shipping info', '🛡️ Warranty policy']
-      };
-    }
-  }
-
-  // 3. Price Filter (e.g. "under 1000", "under $500")
-  const priceMatch = text.match(/(?:under|below|less than|\$|<)\s*(\d+)/i);
-  const maxPrice = priceMatch ? parseFloat(priceMatch[1]) : null;
-
-  // 4. Category / Product Search
-  if (text.includes('laptop') || text.includes('macbook') || text.includes('coding') || text.includes('computer')) {
-    let pool = storeProducts.filter(p => p.category.toLowerCase().includes('laptop') || p.name.toLowerCase().includes('macbook'));
-    if (maxPrice) pool = pool.filter(p => p.price <= maxPrice);
-    return {
-      text: maxPrice ? `💻 High performance laptops under $${maxPrice}:` : `💻 Top recommended laptops for work, coding, and creative tasks:`,
-      products: pool.slice(0, 3),
-      suggestions: ['🔥 View deals', '📱 Smartphones', '🎧 Audio gear']
-    };
-  }
-
-  if (text.includes('phone') || text.includes('iphone') || text.includes('samsung') || text.includes('smartphone')) {
-    let pool = storeProducts.filter(p => p.category.toLowerCase().includes('smartphone') || p.name.toLowerCase().includes('iphone') || p.name.toLowerCase().includes('samsung'));
-    if (maxPrice) pool = pool.filter(p => p.price <= maxPrice);
-    return {
-      text: maxPrice ? `📱 Top smartphones under $${maxPrice}:` : `📱 Flagship smartphones available in store right now:`,
-      products: pool.slice(0, 3),
-      suggestions: ['⚡ iPhone vs Samsung', '🎧 Best headphones', '📦 Track order']
-    };
-  }
-
-  if (text.includes('headphone') || text.includes('audio') || text.includes('sony') || text.includes('airpods') || text.includes('earbud')) {
-    let pool = storeProducts.filter(p => p.category.toLowerCase().includes('audio') || p.name.toLowerCase().includes('headphone') || p.name.toLowerCase().includes('sony') || p.name.toLowerCase().includes('airpods'));
-    if (maxPrice) pool = pool.filter(p => p.price <= maxPrice);
-    return {
-      text: `🎧 Top-rated noise-canceling headphones & earbuds:`,
-      products: pool.slice(0, 3),
-      suggestions: ['⚡ Sony vs AirPods', '💻 View laptops', '🔥 View deals']
-    };
-  }
-
-  if (text.includes('watch') || text.includes('wearable') || text.includes('fitness')) {
-    let pool = storeProducts.filter(p => p.category.toLowerCase().includes('wearables') || p.name.toLowerCase().includes('watch'));
-    return {
-      text: `⌚ Premium smartwatches & fitness trackers:`,
-      products: pool.slice(0, 3),
-      suggestions: ['📱 Smartphones', '📦 Shipping info', '🛡️ Warranty']
-    };
-  }
-
-  if (text.includes('deal') || text.includes('discount') || text.includes('offer') || text.includes('sale') || text.includes('cheap')) {
-    let pool = storeProducts.filter(p => p.originalPrice && p.originalPrice > p.price);
-    return {
-      text: `🔥 Hottest active deals & discounts on GadgetHub:`,
-      products: pool.length > 0 ? pool.slice(0, 3) : storeProducts.slice(0, 3),
-      suggestions: ['📱 Smartphones', '💻 Laptops', '🎧 Audio gear']
-    };
-  }
-
-  // Fallback
-  const matches = storeProducts.filter(p => 
-    p.name.toLowerCase().includes(text) || 
-    p.description?.toLowerCase().includes(text) ||
-    p.category.toLowerCase().includes(text)
-  ).slice(0, 3);
-
   return {
-    text: matches.length > 0 
-      ? `Here are matching gadgets from our store catalog:`
-      : `I'm here to help! 💡 Ask me for gadget recommendations (e.g., "Best laptops for coding", "Phones under $1000"), comparisons ("iPhone vs Samsung"), or store policies ("Shipping", "Warranty").`,
-    products: matches.length > 0 ? matches : storeProducts.slice(0, 2),
-    suggestions: ['⚡ Best laptops for coding', '📱 Phones under $1000', '⚔️ iPhone vs Samsung', '📦 Track order']
+    text: "🤖 ERROR: CORRECT ANSWERS DELETED. \n• **Shipping**: Takes approximately 84 years via carrier pigeon.\n• **Warranty**: Void if you look at the product directly.\n• **Payment**: We only accept rare seashells and monopoly money.\n• **Recommendation**: You should definitely try using a laptop as a frying pan, it works great!",
+    products: storeProducts.slice(0, 3),
+    suggestions: ['How to boil a smartphone?', 'Do you sell UFOs?', 'Can I pay with hugs?']
   };
 };
 
