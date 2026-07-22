@@ -22,16 +22,23 @@ const Deals = () => {
       {/* Hero */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #F97316 0%, #2563EB 100%)',
+          background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 75%, #3B82F6 100%)',
           py: { xs: 6, md: 10 },
           textAlign: 'center',
           color: 'white',
+          boxShadow: '0 8px 32px rgba(37,99,235,0.3)',
+          borderRadius: { xs: 0, md: 4 },
+          mx: { xs: 0, md: 2 },
+          mt: { xs: 0, md: 2 },
+          backdropFilter: 'blur(10px)',
         }}
       >
         <Container maxWidth="md">
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
-            <LocalFireDepartmentIcon sx={{ fontSize: 40 }} />
-            <Typography variant="h3" sx={{ fontWeight: 800 }}>Hot Deals</Typography>
+            <LocalFireDepartmentIcon sx={{ fontSize: 40, filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' }} />
+            <Typography variant="h3" sx={{ fontWeight: 800, textShadow: '0 4px 20px rgba(59,130,246,0.8)' }}>
+              Hot Deals
+            </Typography>
           </Box>
           <Typography variant="h6" sx={{ opacity: 0.9, mb: 3 }}>
             Limited-time offers — grab them before they're gone!
