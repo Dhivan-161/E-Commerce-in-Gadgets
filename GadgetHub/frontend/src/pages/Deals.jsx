@@ -26,24 +26,34 @@ const Deals = () => {
           py: { xs: 6, md: 10 },
           textAlign: 'center',
           color: 'white',
-          boxShadow: '0 8px 32px rgba(37,99,235,0.3)',
-          borderRadius: { xs: 0, md: 4 },
-          mx: { xs: 0, md: 2 },
-          mt: { xs: 0, md: 2 },
-          backdropFilter: 'blur(10px)',
+          boxShadow: '0 20px 50px rgba(37, 99, 235, 0.25)',
+          borderRadius: '20px',
+          mx: { xs: 2, md: 2 },
+          mt: { xs: 2, md: 2 },
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255,255,255,0.12)',
         }}
       >
         <Container maxWidth="md">
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
-            <LocalFireDepartmentIcon sx={{ fontSize: 40, filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' }} />
-            <Typography variant="h3" sx={{ fontWeight: 800, textShadow: '0 4px 20px rgba(59,130,246,0.8)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2, position: 'relative' }}>
+            {/* Radial Glow Behind Title */}
+            <Box sx={{
+              position: 'absolute',
+              width: '200px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0) 70%)',
+              filter: 'blur(15px)',
+              zIndex: 0
+            }} />
+            <LocalFireDepartmentIcon sx={{ fontSize: 40, filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5))', zIndex: 1, position: 'relative' }} />
+            <Typography variant="h3" sx={{ fontWeight: 800, textShadow: '0 0 15px rgba(59,130,246,0.8)', zIndex: 1, position: 'relative' }}>
               Hot Deals
             </Typography>
           </Box>
-          <Typography variant="h6" sx={{ opacity: 0.9, mb: 3 }}>
+          <Typography variant="h6" sx={{ opacity: 0.9, mb: 3, position: 'relative', zIndex: 1 }}>
             Limited-time offers — grab them before they're gone!
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, position: 'relative', zIndex: 1 }}>
             <TimerIcon />
             <Typography variant="body1" sx={{ fontWeight: 600 }}>Deals refresh every 24 hours</Typography>
           </Box>
