@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { registerUser as apiRegister, loginUser as apiLogin, getToken, setToken, removeToken } from '../services/api';
+import { registerUser as apiRegister, loginUser as apiLogin, getUserProfile, getToken, setToken, removeToken } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -21,21 +21,33 @@ export const AuthProvider = ({ children }) => {
 
   // ── Rehydrate session from stored token on mount ────────────────────────────
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      const decoded = decodeToken(token);
-      if (decoded && decoded.exp * 1000 > Date.now()) {
-        // Token is still valid — restore session from token payload
-        setCurrentUser({
-          id: decoded.id,
-          isAdmin: decoded.isAdmin,
-        });
-      } else {
-        // Token expired — clear it
-        removeToken();
+    const checkSession = async () => {
+      const token = getToken();
+      if (token) {
+        const decoded = decodeToken(token);
+        if (decoded && decoded.exp * 1000 > Date.now()) {
+          // Token is still valid — fetch full user profile to restore session correctly
+          try {
+            const data = await getUserProfile();
+            setCurrentUser({
+              id: data._id,
+              name: data.name,
+              email: data.email,
+              isAdmin: data.isAdmin,
+              profileImage: data.profileImage,
+            });
+          } catch (error) {
+            removeToken();
+          }
+        } else {
+          // Token expired — clear it
+          removeToken();
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    
+    checkSession();
   }, []);
 
   // ── Sign up — calls the real backend API ────────────────────────────────────
@@ -55,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       name: data.user.name,
       email: data.user.email,
       isAdmin: data.user.isAdmin,
+      profileImage: data.user.profileImage,
     });
     return data;
   };
