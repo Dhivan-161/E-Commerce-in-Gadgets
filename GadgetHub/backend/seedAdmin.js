@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs');
 const User = require('./moduls/user');
 
 const ADMIN_EMAIL    = 'admin@gadgethub.com';
-const ADMIN_PASSWORD = 'Admin@123';
-const ADMIN_NAME     = 'Admin';
+const ADMIN_PASSWORD = 'admin@123';
+const ADMIN_NAME     = 'admin';
 
 async function seedAdmin() {
   try {
